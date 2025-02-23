@@ -1,0 +1,63 @@
+* {
+  margin: 0;
+  pad: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(189, 149, 189);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 20px;
+  padding: 50px;
+}
+
+h1 {
+  font-size: 30px;
+  color: rgb(253, 193, 124);
+  border-bottom: 5px solid #444;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin-bottom: 18px;
+  text-align: center;
+  /* background-color: #7a7979; */
+  color: whitesmoke;
+  width: 400px;
+  margin-top: 30px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.first {
+  color: white;
+}
+
+.second {
+  color: #444;
+}
+
+#your-name {
+  background-color: rgb(200, 142, 228);
+  border: 5px solid #444;
+  width: 400px;
+}
+
+input,
+button {
+  padding: 10px;
+  font-size: 16px;
+}
+a {
+  background-color: yellowgreen;
+}
+
+#your-name h2 {
+  color: rgba(250, 250, 250, 0.747);
+}
+
+#zorro-sombre {
+  width: 750px;
+}
