@@ -104,3 +104,40 @@ poll.displayResults.call({ answers: [5, 2, 3] });
 poll.displayResults.call({ answers: [5, 2, 3] }, 'string');
 poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] });
 poll.displayResults.call({ answers: [1, 5, 3, 9, 6, 1] }, 'string');
+
+// Coding Challenge #2
+//  This is more of a thinking challenge than a coding challenge �
+// Your tasks:
+
+/* 1. Take the (Immeidately Invoked Function Expeession) IIFE below and at the end of the function, 
+attach an event listener that changes the color of the selected h1 element ('header') to blue, 
+each time the body element is clicked. Do not select the h1 element again! */
+
+(function () {
+  const header = document.querySelector('h1');
+  header.style.color = 'red';
+
+  //document.body also works.. as we're only interested in body clicks right now.
+  document.querySelector('body').addEventListener('click', function () {
+    header.style.color = 'blue';
+    setTimeout(function () {
+      header.style.color = 'white';
+    }, 500);
+  });
+})();
+
+/* 2. And now explain to yourself (or someone around you) why this worked! Take all
+the time you need. Think about when exactly the callback function is executed,
+and what that means for the variables involved in this example.
+
+GOOD LUCK 🦊*/
+
+/*
+This IIFE works because it is executed immediately. 
+As it's an IIFE, it isn't assigned to a variable, so it's scope is private. 
+Albeit prviate the IIFE contains a callback function that will changer the header variable's style colour
+ to blue when a click is registered on the webpage's body.
+ The callback function has closure, as the header is inaccesible and private, but is accessible to the eventListener callback.
+ 
+Immediately after (cos I wanted to) a timeout function is in effect, and after half a second, the text turns white.
+*/

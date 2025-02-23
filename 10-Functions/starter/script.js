@@ -414,19 +414,19 @@
 // */
 
 //immediately invoked function expression (IIFE)
-const runOnce = function () {
-  console.log('This will never run again');
-};
-runOnce();
+// const runOnce = function () {
+// console.log('This will never run again');
+// };
+// runOnce();
+//
+// Function is now an expression - not assigned to a variable, just a function value/expression
+// (function () {
+// console.log('This will never run again');
 
-//Function is now an expression - not assigned to a variable, just a function value/expression
-(function () {
-  console.log('This will never run again');
-  //const isPrivate = 23;
-})(); //we immediately call it. IIFE!
-
-//Arrow Function IIFE
-(() => console.log('This will also never run again'))();
+// })(); //we immediately call it. IIFE!
+//
+// Arrow Function IIFE
+// (() => console.log('This will also never run again'))();
 
 //Why?
 /*
@@ -440,12 +440,12 @@ This allows for data privacy, and protection from overwriting values
 
 // let or const create their own scopeblock
 
-{
-  const isPrivate = 23;
-  var isNOTPrivate = 45;
-}
-//console.log(isPrivate);
-console.log(isNOTPrivate); //var ignores
+// {
+// const isPrivate = 23;
+// var isNOTPrivate = 45;
+// }
+// console.log(isPrivate);
+// console.log(isNOTPrivate); //var ignores
 
 // If we want to create a new scope for data privacy, we can simply create a new block.
 // If you need to invoke a method just once, IIFE is great for this.
@@ -475,9 +475,9 @@ const booker = secureBooking();
 // SecureBooking is the birthplace of the function.
 //This apparently cannot be explained with the scope chain alone.
 
-booker(); // 1 passenger
-booker(); // 2 passegners
-booker(); // 3 passengers
+// booker(); // 1 passenger
+// booker(); // 2 passegners
+// booker(); // 3 passengers
 
 //The execuion context of the secureBooking was popped off the callstack after that function finished running,
 // together with its variable environment
@@ -498,3 +498,85 @@ booker(); // 3 passengers
 // Booker was created in the execution context of secureBooking, therefore Booker will get access to the variable environment of secureBooking
 // This is how the Booker function can read and manipulate the passengerCount variable
 // This is the closure
+
+// A closure is the closed over vairable environment of the execution context in which a function was created
+// even after that execution context if gone. Or in other words, even after the function
+// to which the execution context belong, has returned.
+
+//  closure gives the function all to al lthe variables of its parent function, event After that parent function has returned
+// The function keeps a references to its oute rscope, which preserves the scope chain throughout time
+
+// a closure makes sure that a function doesn't lose connectio nto vairables that existed at the function's birth place
+
+// Another way of saying it:
+// A function is like a backpack that a function carries around where it goes. This backpack has all the variables
+// that were present in the environment where the function was created.
+
+// Christ, I hope I remember this now.
+// We do not have to create closures manually, this is a javascript feature that happens automatically.
+// We can't even access close-over variables explicitly. A Closure is not a tangible js obkect
+
+//using console.dir we can see the Closure scope in console.
+//console.dir(booker);
+
+//FYI when you see double brackets [[ in console ]] , it's an internal property we cannot access in our code.
+
+// Closures Part 2
+
+console.log(`Closures - Part 2 (this time it's educational!)`);
+
+//Example 1
+let f;
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+const h = function () {
+  const b = 777;
+  f = function () {
+    console.log(b * 2);
+  };
+};
+
+g();
+f();
+// re-assigning the f function
+// Loses the variable environment containing a, the old closure has disappeared
+//
+h();
+f();
+console.dir(f);
+
+// Example 2
+
+// Creating a timer
+
+const boardPassengers = function (n, wait) {
+  const perGroup = n / 3;
+  // this will kick in after the wait (in seconds) has timed out.
+  setTimeout(function () {
+    console.log(`We are now boarding all ${n} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000); //Execute after 10 seconds
+
+  // This is called almost immediately as it is not waiting
+  console.log(`Will start boarding in ${wait} seconds`);
+};
+
+boardPassengers(180, 3);
+
+// The callback function (setTimeout) was executed completely independantly from the boardPassengers function
+// but still, the callback function is able ot use all the variables (n and wait) in the variable environment in which it was created
+
+// This is a clear sign of a closure being created.
+
+//The closure has priority over the scope chain
+//If scope chain has priority over the closure, then this callback function would use the global variable
+//below
+const perGroup = 1000;
+boardPassengers(180, 3);
+
+console.log(perGroup);
