@@ -475,9 +475,9 @@ const booker = secureBooking();
 // SecureBooking is the birthplace of the function.
 //This apparently cannot be explained with the scope chain alone.
 
-booker();
-booker();
-booker();
+booker(); // 1 passenger
+booker(); // 2 passegners
+booker(); // 3 passengers
 
 //The execuion context of the secureBooking was popped off the callstack after that function finished running,
 // together with its variable environment
@@ -490,3 +490,11 @@ booker();
 // if an object is reachable by a closure it cannot be gargbage collected, and will stay in the heap indefinitely
 // and this applies to objects in the heap, and variable environments for variable environments for variables that are stored in the stack
 // as long as they're reachable by a closure.
+
+//So how do we access the passengerCount?
+
+// Any function always has access to the variable environment of the execution context
+// in which the function was created
+// Booker was created in the execution context of secureBooking, therefore Booker will get access to the variable environment of secureBooking
+// This is how the Booker function can read and manipulate the passengerCount variable
+// This is the closure
