@@ -62,7 +62,7 @@ const restaurant = {
 
 /*
 restaurant.orderPizza('Egg', 'Bacon', 'Onion', 'Yoghurt', 'Kenneth');
-restaurant.orderPizza('Fuck all');
+restaurant.orderPizza('Naff all');
 */
 /*
 // We passed one object into the function, not 4 arguments.
@@ -467,7 +467,7 @@ console.log(...newArr);
 
 */
 /*
-const newMenu = [...restaurant.mainMenu, 'Gnocci', 'Egg', 'Retards'];
+const newMenu = [...restaurant.mainMenu, 'Gnocci', 'Egg', 'Gnocchi 2'];
 //console.log(newMenu);
 
 // the spread operator is similar t odestructuring

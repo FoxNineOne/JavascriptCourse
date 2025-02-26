@@ -74,3 +74,85 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+
+// Methods are simply functions we can call on objects, functions attached on objects
+// Array methods are the same for all Arrays
+
+//let arr = ['a', 'b', 'c', 'd', 'e'];
+
+//Slice
+// console.log(arr.slice(2)); //Same as string, first parameter is start index
+// console.log(arr.slice(2, 4)); //End parameter asw second parameter. End Parameter is not included in return
+// console.log(arr.slice(-1)); //-1 is always the last element of an array
+// console.log(arr.slice(1, -2));
+//
+// console.log(arr.slice()); //can use without parameters to make a shallow copy of an array
+//console.log(...arr); //Spread operator will also offer this, both offer the same here.
+//Slice just gives options of trimming from start/finish, and you can chyain multiple methods together
+
+// Splice - similar to slice, but does affect original array.
+//console.log(arr.splice(2));
+// The extracted elements have been removed from the original array
+/// Splice takes requested part of an array, and removes it from source array
+//console.log(arr);
+
+// Splice is generally used for deletion, the value of what is removed isn't always considered
+// Last element E has now been removed
+//arr.splice(-1);
+//console.log(arr);
+
+//The second parameter is known as "delete count"
+// Essentially, the below says start at position number 1, and remove 2 elements
+//arr.splice(1, 2);
+//console.log(arr);
+
+//Reverse
+// console.log(arr);
+// const arr2 = ['j', 'i', 'h', 'g', 'f'];
+// console.log(arr2);
+//
+// Simple can o beans = reverses the array order
+// console.log(arr2.reverse());
+// Reverse method does mutate the original array
+// console.log(arr2);
+//
+// Concat concatenate things
+//
+// // DOESNT MUTATE ARRAY
+// const letters = arr.concat(arr2); //spoecify second array in argument
+// console.log(letters);
+// Same process, also no mutation
+// console.log([...arr, ...arr2]);
+//
+// JOIN -- NO MUTATO MI AMIGO!
+// Returns a string where the supplied argument is used as delimiter
+// console.log(letters.join('-'));
+// console.log(letters);
+
+// Apparently I already know
+// Push, Unshift,. Pop, Shift, IndexOf and Icludes..
+
+// New with ES2022 - At method
+const arr = [23, 11, 64];
+//Original approach
+console.log(arr[0]);
+// Now with ES2022, the At method!!!!
+console.log(arr.at(0));
+
+// Say we want the last element of the array, and do not know the length?
+
+//You'd be scrahbling about with this!
+console.log(arr[arr.length - 1]);
+// or , use slice...
+console.log(arr.slice(-1)[0]); //[0] takes the value out of the bracket otherwise [64] is returned over 64
+
+// with at you can just call -1
+console.log(arr.at(-1));
+
+//if you do want to do method chaining, at method is perfect for chaining
+
+//if you just want to pull a value from an array, not a thing wrong with the old [] method
+
+//The at method also works on strings
+console.log('Jiji!'.at(3));
+console.log('Jiji!'.at(-``));
