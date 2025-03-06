@@ -83,6 +83,12 @@ const displayMovement = function (movements) {
 
 displayMovement(account1.movements);
 
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, movement) => acc + movement, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+calcDisplayBalance(account1.movements);
+
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
@@ -103,37 +109,6 @@ console.log(accounts);
 
 // The map method allowed us to make a simple array to contain initials of name it is used on
 // forEach is a great method to progress work without needing to return anything back.
-
-// FILTER
-
-// Filter is used to filter elements that satisfy a certain condition
-// Use a callback function to specify condition
-
-//like other callback functions (map and for each) this one gets access to current array element as well as index, and entire array
-
-//Only movement arrays with positive values will be in deposits array
-const deposits = movements.filter(function (mov) {
-  return mov > 0;
-});
-console.log(movements);
-console.log(deposits);
-
-//For of alternative -- apparently, curly braces are not needed?
-const depositsFor = [];
-for (const mov of movements) if (mov > 0) depositsFor.push(mov);
-console.log(depositsFor);
-
-// What is the difference between the for and filter?
-// We can chain the filter and other array methods over the for loop.
-
-//Create aarray of withdrawals
-//Bonus - I made arrow function c:
-const withdrawals = movements.filter(mov => mov < 0);
-console.log(withdrawals);
-
-// Jonas did arrow too, twas identical!
-
-// REDUCE!
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////

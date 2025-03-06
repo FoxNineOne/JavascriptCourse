@@ -2,11 +2,11 @@
 
 //LECTURES
 
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 //Methods are simply functions we can call on objects, functions attached on objects
 //Array methods are the same for all Arrays
-
+/*
 let arr = ['a', 'b', 'c', 'd', 'e'];
 
 //Slice
@@ -58,6 +58,8 @@ console.log([...arr, ...arr2]);
 //Returns a string where the supplied argument is used as delimiter
 console.log(letters.join('-'));
 console.log(letters);
+
+*/
 /*
 Apparently I already know
 Push, Unshift,. Pop, Shift, IndexOf and Icludes..
@@ -147,7 +149,7 @@ for (const [i, movement] of movements.entries()) {
 //otherwise, personal preference
 //
 //For Each on Maps and Sets
-
+/*
 const currencies = new Map([
   ['USD', 'United States dollar'],
   ['EUR', 'Euro'],
@@ -164,7 +166,7 @@ Set;
 
 const currenciesUnique = new Set(['USD', 'GBP', 'USD', 'EUR', 'EUR']);
 
-console.log(currenciesUnique);
+// console.log(currenciesUnique);
 
 currenciesUnique.forEach(function (value, key, map) {
   console.log(`${key}: ${value}`);
@@ -177,7 +179,7 @@ currenciesUnique.forEach(function (value, _, map) {
   //Apparently, an underscore highlights that a variable is "throwaway" and not needed
   console.log(`${value}: ${value}`);
 });
-
+*/
 // MAP
 
 // Map is a method we can use to loop over arrays. Map is similar to the for each method, with the difference that map creates a brand new array based on the original array
@@ -197,8 +199,8 @@ currenciesUnique.forEach(function (value, _, map) {
 // This whole process has "reduced" the array to a singlew elements
 
 // Map Lecture
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-const eurToUsd = 1.1;
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// const eurToUsd = 1.1;
 
 // const movementsUSD = movements.map(function (mov) {
 //   return mov * eurToUsd;
@@ -209,10 +211,10 @@ const eurToUsd = 1.1;
 
 // Apparently, the => kinda means "return" and that helps you figure out these new whipper snapper functions
 
-const movementsUSD = movements.map(mov => mov * eurToUsd);
+//const movementsUSD = movements.map(mov => mov * eurToUsd);
 
-console.log(movements);
-console.log(movementsUSD);
+// console.log(movements);
+// console.log(movementsUSD);
 
 // // Achieve same via a for of loop
 // const movementsUSDfor = [];
@@ -223,11 +225,66 @@ console.log(movementsUSD);
 
 // The map method has access to same three parameters  : value,  index,  array
 // Bit of ternary and arrow formula coming together
-const movementsDescriptions = movements.map(
-  (mov, i, a) =>
-    `Movement ${i + 1}: You ${mov > 0 ? `deposited` : `withdrew`} ${Math.abs(
-      mov
-    )}`
-);
+// const movementsDescriptions = movements.map(
+//   (mov, i, a) =>
+//     `Movement ${i + 1}: You ${mov > 0 ? `deposited` : `withdrew`} ${Math.abs(
+//       mov
+//     )}`
+// );
 
-console.log(movementsDescriptions);
+// FILTER
+
+// Filter is used to filter elements that satisfy a certain condition
+// Use a callback function to specify condition
+
+//like other callback functions (map and for each) this one gets access to current array element as well as index, and entire array
+
+//Only movement arrays with positive values will be in deposits array
+const deposits = movements.filter(function (mov) {
+  return mov > 0;
+});
+//console.log(movements);
+//console.log(deposits);
+
+//For of alternative -- apparently, curly braces are not needed?
+const depositsFor = [];
+for (const mov of movements) if (mov > 0) depositsFor.push(mov);
+//console.log(depositsFor);
+
+// What is the difference between the for and filter?
+// We can chain the filter and other array methods over the for loop.
+
+//Create aarray of withdrawals
+//Bonus - I made arrow function c:
+const withdrawals = movements.filter(mov => mov < 0);
+//console.log(withdrawals);
+
+// Jonas did arrow too, twas identical!
+
+// REDUCE!
+
+//  REDUCE
+// Can add all the elements of an Array together to return one sum element
+
+// Also gets callback, but different to map or forEach
+//First parameter is always current element, the index, then array
+//Th first is actually called accumulator
+const balance = movements.reduce((acc, cur, i, arr) => acc + cur, 0); //Reduce also has an initial value parameter! We set this to 0 here.
+
+console.log(`Final Balance: ${balance}`);
+
+let balance2 = 0; //Initial accumulator value
+for (const mov of movements) balance2 += mov;
+console.log(balance2);
+// Always need an external variable when using for loop
+// Can be cumbersome when using a lot of for loops
+// The arrays methods do not need this
+
+//Reduce can do more than just add up all values
+//We can pull the maximum value of the movements
+const maxVal = movements.reduce((a, mov) => {
+  if (a > mov) return a;
+  else return mov;
+}, movements[0]); //Using 0 here would not be correct because first value might be negative!
+
+console.log(maxVal);
