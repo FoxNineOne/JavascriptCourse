@@ -908,7 +908,7 @@ console.log('== MAPS ==');
 // Maps are a lot more useful than sets
 // A Map is a data structure we can use to map values to keys
 //
-//Maps can have any type of keys.. objects arrays,nested maps
+//Maps can have any type for keys.. objects arrays,nested maps which makes it super useful.
 
 //Easiest to create empty map
 const rest = new Map();
