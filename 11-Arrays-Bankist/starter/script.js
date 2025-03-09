@@ -73,7 +73,7 @@ const displayMovement = function (movements) {
           <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-          <div class="movements__value">${mov}</div>
+          <div class="movements__value">${mov}€</div>
         </div>
         `;
 
@@ -85,9 +85,41 @@ displayMovement(account1.movements);
 
 const calcDisplayBalance = function (movements) {
   const balance = movements.reduce((acc, movement) => acc + movement, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance} €`;
 };
 calcDisplayBalance(account1.movements);
+
+const eurToUsd = 1.1;
+const calcDisplaySummary = function (movement) {
+  const incomes = movement
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov);
+
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out = movement.filter(mov => mov < 0).reduce((acc, mov) => acc + mov);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  // 1.2 of desposited amount
+  const interest = movement
+    .filter(mov => mov > 0)
+    .map(deposit => deposit * 0.012)
+    // The bank will only pay interest returns if they are over 1
+    .filter((int, i, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+
+calcDisplaySummary(account1.movements);
+
+const totalDepositsUSD = movements
+  .filter(mov => mov > 0)
+  .map(mov => mov * eurToUsd)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(totalDepositsUSD);
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -100,7 +132,6 @@ const createUsernames = function (accs) {
 };
 
 createUsernames(accounts);
-console.log(accounts);
 
 // Create a username for each username in accounts array
 // for Each is the choice, as we do not want to create new array
