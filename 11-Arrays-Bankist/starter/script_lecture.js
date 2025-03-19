@@ -334,7 +334,7 @@ const totalDepositsUSD = movements
   .filter(mov => mov > 0)
   .map(mov => mov * eurToUsd)
   .reduce((acc, mov) => acc + mov, 0);
-console.log(totalDepositsUSD);
+// console.log(totalDepositsUSD);
 
 //Chaining is efficient, easy to read, but can be difficult to debug (not unlike mongo aggregatres..)
 // To help, check out the array in specific, or even each steps to see where the root cause stems from
@@ -342,11 +342,11 @@ console.log(totalDepositsUSD);
 const debugTotalDepositsUSD = movements
   .filter(mov => mov < 0) //Bug created.. this will return all the withdrawals, not deposits.. hence negative result
   .map((mov, i, arr) => {
-    console.log(i, arr); //returning the full array will show what is being fed to this function
+    // console.log(i, arr); //returning the full array will show what is being fed to this function
     return mov * eurToUsd;
   })
   .reduce((acc, mov) => acc + mov, 0);
-console.log(debugTotalDepositsUSD);
+// console.log(debugTotalDepositsUSD);
 
 //I could've added loggin at the filter or reduce stage too... but reversing arrow functions on a sunday morning isn't really what I'm feeling right now.
 
@@ -364,16 +364,95 @@ console.log(debugTotalDepositsUSD);
 // We'll filter on withdrawals - unlike filter method it will not turn array
 // It'll only pull back the FIRST element where the criteria is met.
 // Filter will return ALL elements that meet criteria in a new Array
-// Find pull back the first element as its data type, no new array created.
+// Find pull back the first element as its saource data type, no new array created.
 
-const firstWithdrawal = movements.find(mov => mov < 0);
-console.log(movements);
-console.log(firstWithdrawal);
-
-console.log(accounts);
-const account = accounts.find(acc => acc.owner === 'Jessica Davis');
-console.log(account);
+// const firstWithdrawal = movements.find(mov => mov < 0);
+// console.log(movements);
+// console.log(firstWithdrawal);
+//
+// console.log(accounts);
+// const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+// console.log(account);
 
 //Due to the limitation of pulling back the first where criteria is met - The goal of a find method is usually to search where only one element can satisfy that condition
 // This is like like primary keys in database structures.. you couldn't search personnel on name values, or dates of birth
 // But a system ID, a NI number, something that cannot be duplicated and can only ever return one element is crucial
+
+//Find index
+// returns the index of the found element, not the element itself. (this would be useful for mongo at work)
+
+// two new methods were addded in ES2023
+
+//findLast and findlastIndex -- do same as originals, just in reverse (search from the last to first index)
+
+// console.log(movements);
+// const lastWithdrawal = movements.findLast(mov => mov < 0);
+// console.log(lastWithdrawal);
+// const lastLargeMovementIndex = movements.findLastIndex(
+//   mov => Math.abs(mov) > 2000
+// );
+
+// console.log(
+//   `Your latest large movement was ${
+//     movements.length - lastLargeMovementIndex
+//   } movements ago`
+// );
+
+// Some and Every method
+
+//First let's go back to includes
+console.log(movements);
+// console.log(movements.includes(-130)); // We can use includes method to test if an array contains a value. Returns true/false
+// testing for equality. The criteria has to be exact
+
+//testing for condition? This is where some comes into play.
+// SOME
+const anyDeposits = movements.some(mov => mov > 0);
+// console.log(anyDeposits);
+
+// EVERY method
+// only returtns true if ALL of the elements in array pass critera
+console.log(account4.movements.every(mov => mov > 0));
+
+// Good for data validation
+
+// separate callback
+const deposit = mov => mov > 0;
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+console.log(movements.filter(deposit));
+
+//FLAT and FLAT MAP
+
+// If we have nested arrays , we can literally flatten them to one layer of array
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+// Flat is new with ES2019.. may not work in old browsers
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+// Flat Method only goes one layer deep
+console.log(arrDeep.flat());
+console.log(arrDeep.flat(2)); //we can set a depth! by default it is 1
+
+//We can use Flat Map to find the deepest layer maybe?
+
+const accountMovements = accounts.map(acc => acc.movements);
+const allMovements = accountMovements.flat();
+console.log(allMovements);
+
+const overallBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance);
+
+const overallBalance2 = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance2);
+
+//FLAT MAP
+// As Map and Flat is common practise, FlatMap was created to do this but improve performance
+// Flat Map only goes one level deep, so if you require further, use Flat
+const overallBalance3 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance3);

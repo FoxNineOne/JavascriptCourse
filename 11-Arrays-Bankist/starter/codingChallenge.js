@@ -167,3 +167,108 @@ console.log(calcAverageHumanAge(testData2));
 
 calcAverageHumanAge2(testData1);
 calcAverageHumanAge2(testData2);
+
+//Coding Challenge 4
+
+const breeds = [
+  {
+    breed: 'German Shepherd',
+    averageWeight: 32,
+    activities: ['fetch', 'swimming'],
+  },
+  {
+    breed: 'Dalmation',
+    averageWeight: 24,
+    activities: ['running', 'fetch', 'agility'],
+  },
+  {
+    breed: 'Labrador',
+    averageWeight: 28,
+    activities: ['swimming', 'fetch'],
+  },
+  {
+    breed: 'Beagle',
+    averageWeight: 12,
+    activities: ['digging', 'fetch'],
+  },
+  {
+    breed: 'Husky',
+    averageWeight: 26,
+    activities: ['running', 'agility', 'swimming'],
+  },
+  {
+    breed: 'Bulldog',
+    averageWeight: 36,
+    activities: ['sleeping'],
+  },
+  {
+    breed: 'Poodle',
+    averageWeight: 18,
+    activities: ['agility', 'fetch'],
+  },
+];
+
+// The challenge on the video differs to the PDF, so I'm writing this out by hand like a mug.
+
+// YOUR TASKS:
+
+// 1. Store the average weight of a "Husky" in a variable "huskyWeight"
+
+const huskyWeight = breeds.find(breed => breed.breed === 'Husky').averageWeight;
+console.log(huskyWeight);
+
+// 2. Find the name of the only breed that likes both "running" and "fetch" ("dogBothActivities" variable)
+
+const dogBothActivities = breeds.find(
+  breed =>
+    breed.activities.includes('running') && breed.activities.includes('fetch')
+);
+console.log(dogBothActivities);
+console.log(dogBothActivities?.breed);
+
+// 3. Create an array "allActivities" of all the activities of all the dog breeds.
+
+// flatMap() is a combination of map() and flat().
+// breed.activities extracts the activities from each dog object.
+// It then flattens the resulting arrays into one single array.
+
+const allActivities = breeds.flatMap(breed => breed.activities);
+console.log(allActivities);
+
+// 4. Create an array "uniqueActivities" that contains only the unique activities (no activity repetitions).
+// HINT : Use a technique  with a special data structure that we studied a few sections ago.
+
+const uniqueActivities = new Set(breeds.flatMap(breed => breed.activities));
+console.log(uniqueActivities);
+
+// 5. Many dog breeds like to swim. What other activities do these dogs like?
+// Store all the OTHER activities these breeds like to do, in a unique array called "swimmingAdjacent"
+
+const swimmingAdjacent = new Set(
+  breeds
+    .filter(breed => breed.activities.includes('swimming')) //Find swimming breeds
+    .flatMap(breed =>
+      breed.activities.filter(activity => activity !== 'swimming')
+    )
+); // filter out swimming to return other values
+console.log(swimmingAdjacent);
+
+// 6. Do all the breeds have an average weight of 10kg or more?
+// Log to the console whether "true" or "false"
+
+const averageWeight = breeds.every(breed => breed.averageWeight >= 10);
+console.log(averageWeight);
+
+// 7. Are there any breeds that are "active"? "Active" means that the dog has 3 or more activities.
+// Log to the console whether "true" or "false".
+
+const hasActiveBreed = breeds.some(breed => breed.activities.length >= 3);
+console.log(hasActiveBreed);
+
+// BONUS : What's the average weight of the heviest breed that likes to fetch
+// HINT : Use the Math.max method along with the ... operator
+const averageWeightFetch = breeds
+  .filter(breed => breed.activities.includes('fetch'))
+  .map(breed => breed.averageWeight);
+const maxWeight = Math.max(...averageWeightFetch);
+console.log(maxWeight);

@@ -27,8 +27,8 @@ const account3 = {
 };
 
 const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
+  owner: 'Shaheen Shaikh',
+  movements: [430, 1000, 700, 450, 90, -60, 240],
   interestRate: 2.1,
   pin: 4444,
 };
@@ -81,45 +81,41 @@ const displayMovement = function (movements) {
   });
 };
 
-displayMovement(account1.movements);
-
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, movement) => acc + movement, 0);
-  labelBalance.textContent = `${balance} €`;
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, movement) => acc + movement, 0);
+  labelBalance.textContent = `${acc.balance} €`;
 };
-calcDisplayBalance(account1.movements);
 
 const eurToUsd = 1.1;
-const calcDisplaySummary = function (movement) {
-  const incomes = movement
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
     .filter(mov => mov > 0)
-    .reduce((acc, mov) => acc + mov);
-
+    .reduce((acc, mov) => acc + mov, 0);
   labelSumIn.textContent = `${incomes}€`;
 
-  const out = movement.filter(mov => mov < 0).reduce((acc, mov) => acc + mov);
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
 
   // 1.2 of desposited amount
-  const interest = movement
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(deposit => deposit * 0.012)
+    .map(deposit => (deposit * acc.interestRate) / 100)
     // The bank will only pay interest returns if they are over 1
     .filter((int, i, arr) => {
-      console.log(arr);
+      // console.log(arr);
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
   labelSumInterest.textContent = `${interest}€`;
 };
 
-calcDisplaySummary(account1.movements);
-
 const totalDepositsUSD = movements
   .filter(mov => mov > 0)
   .map(mov => mov * eurToUsd)
   .reduce((acc, mov) => acc + mov, 0);
-console.log(totalDepositsUSD);
+//console.log(totalDepositsUSD);
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -132,6 +128,118 @@ const createUsernames = function (accs) {
 };
 
 createUsernames(accounts);
+
+const updateUI = function (acc) {
+  // Display movements
+  displayMovement(acc.movements);
+  // Display balance
+  calcDisplayBalance(acc);
+  // Display Summary
+  calcDisplaySummary(acc);
+};
+
+//Event Handlers
+
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  //Prevent Form from submitting
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  // console.log(currentAccount);
+
+  //? Optional Chaining.. the addition of the question mark will prevent error as it will check if current account exists first.
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and welcome message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    // Enable visibility of the bank app
+    containerApp.style.opacity = 1;
+    //Clear the input fields
+    inputLoginUsername.value = inputLoginPin.value = ''; //This assignment will set both fields to blank, it works RtL
+    inputLoginPin.blur();
+
+    updateUI(currentAccount);
+
+    console.log('LOGIN');
+  } else {
+    alert('Wrong Username / Password combination');
+  }
+});
+
+//Transfer money
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault(); //Adding again, because a form will reload the page.
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  // console.log(`${amount} shiny coins for, ${receiverAcc?.owner}`);
+
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    amount <= currentAccount.balance &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
+    // console.log('Conditions met. Transfer valid');
+
+    // Transfer the money
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+
+    //Update the UI
+    updateUI(currentAccount);
+  }
+});
+
+// Loan
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  // Only grants a loan if there has been atleast one deposit that is at least 10% of the requested loan amount
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement to account
+    currentAccount.movements.push(amount);
+
+    //Update UI
+    updateUI(currentAccount);
+    inputLoanAmount.value = '';
+  }
+});
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+    // console.log(index);
+    accounts.splice(index, 1); //Splice will mutate underlying array
+
+    // Hide UI
+    containerApp.style.opacity = 0;
+
+    console.log(`Account Deleted.`);
+  } else {
+    alert(`Incorrect Credentials Supplied`);
+  }
+
+  inputCloseUsername.value = inputClosePin.value = ''; // set both fields to blank,
+  //Should this not need a check to ensure logged in user matches user we're closing?
+  // Otherwise one person could close everyone
+});
 
 // Create a username for each username in accounts array
 // for Each is the choice, as we do not want to create new array
