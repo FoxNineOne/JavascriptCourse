@@ -1,15 +1,32 @@
 'use strict';
-/////////////////////////////////////////////////
-//BANKIST APP
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// BANKIST APP
+
+/////////////////////////////////////////////////
 // Data
+
+// DIFFERENT DATA! Contains movement dates, currency and locale
 
 const account1 = {
   owner: 'Jonas Schmedtmann',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2020-01-28T09:15:04.904Z',
+    '2020-04-01T10:17:24.185Z',
+    '2020-05-08T14:11:59.604Z',
+    '2020-05-27T17:01:17.194Z',
+    '2020-07-11T23:36:17.929Z',
+    '2020-07-12T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
@@ -17,24 +34,24 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
-const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
+const accounts = [account1, account2];
 
-const account4 = {
-  owner: 'Shaheen Shaikh',
-  movements: [430, 1000, 700, 450, 90, -60, 240],
-  interestRate: 2.1,
-  pin: 4444,
-};
-
-const accounts = [account1, account2, account3, account4];
-
+/////////////////////////////////////////////////
 // Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
@@ -61,35 +78,35 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovement = function (movements, sort = false) {
-  //Clear the Movement container first
+/////////////////////////////////////////////////
+// Functions
+
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
 
-  // slice will make a copy of movements, then we'll sort the copy
   const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
-          <div class="movements__row">
-          <div class="movements__type movements__type--${type}">${
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-          <div class="movements__value">${mov}€</div>
-        </div>
-        `;
+        <div class="movements__value">${mov}€</div>
+      </div>
+    `;
 
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
 
 const calcDisplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce((acc, movement) => acc + movement, 0);
-  labelBalance.textContent = `${acc.balance} €`;
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${acc.balance}€`;
 };
 
-const eurToUsd = 1.1;
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
@@ -101,11 +118,9 @@ const calcDisplaySummary = function (acc) {
     .reduce((acc, mov) => acc + mov, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
 
-  // 1.2 of desposited amount
   const interest = acc.movements
     .filter(mov => mov > 0)
     .map(deposit => (deposit * acc.interestRate) / 100)
-    // The bank will only pay interest returns if they are over 1
     .filter((int, i, arr) => {
       // console.log(arr);
       return int >= 1;
@@ -113,12 +128,6 @@ const calcDisplaySummary = function (acc) {
     .reduce((acc, int) => acc + int, 0);
   labelSumInterest.textContent = `${interest}€`;
 };
-
-const totalDepositsUSD = movements
-  .filter(mov => mov > 0)
-  .map(mov => mov * eurToUsd)
-  .reduce((acc, mov) => acc + mov, 0);
-//console.log(totalDepositsUSD);
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -129,93 +138,84 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
-
 createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovement(acc.movements);
+  displayMovements(acc.movements);
+
   // Display balance
   calcDisplayBalance(acc);
-  // Display Summary
+
+  // Display summary
   calcDisplaySummary(acc);
 };
 
-//Event Handlers
-
+///////////////////////////////////////
+// Event handlers
 let currentAccount;
 
 btnLogin.addEventListener('click', function (e) {
-  //Prevent Form from submitting
+  // Prevent form from submitting
   e.preventDefault();
 
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  // console.log(currentAccount);
+  console.log(currentAccount);
 
-  //? Optional Chaining.. the addition of the question mark will prevent error as it will check if current account exists first.
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
-    // Display UI and welcome message
+    // Display UI and message
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
     }`;
-    // Enable visibility of the bank app
-    containerApp.style.opacity = 1;
-    //Clear the input fields
-    inputLoginUsername.value = inputLoginPin.value = ''; //This assignment will set both fields to blank, it works RtL
+    containerApp.style.opacity = 100;
+
+    // Clear input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
+    // Update UI
     updateUI(currentAccount);
-
-    console.log('LOGIN');
-  } else {
-    alert('Wrong Username / Password combination');
   }
 });
 
-//Transfer money
 btnTransfer.addEventListener('click', function (e) {
-  e.preventDefault(); //Adding again, because a form will reload the page.
+  e.preventDefault();
   const amount = Number(inputTransferAmount.value);
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
-  // console.log(`${amount} shiny coins for, ${receiverAcc?.owner}`);
-
   inputTransferAmount.value = inputTransferTo.value = '';
 
   if (
     amount > 0 &&
     receiverAcc &&
-    amount <= currentAccount.balance &&
+    currentAccount.balance >= amount &&
     receiverAcc?.username !== currentAccount.username
   ) {
-    // console.log('Conditions met. Transfer valid');
-
-    // Transfer the money
+    // Doing the transfer
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
-    //Update the UI
+    // Update UI
     updateUI(currentAccount);
   }
 });
 
-// Loan
-
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
+
   const amount = Number(inputLoanAmount.value);
-  // Only grants a loan if there has been atleast one deposit that is at least 10% of the requested loan amount
+
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement to account
+    // Add movement
     currentAccount.movements.push(amount);
 
-    //Update UI
+    // Update UI
     updateUI(currentAccount);
-    inputLoanAmount.value = '';
   }
+  inputLoanAmount.value = '';
 });
 
 btnClose.addEventListener('click', function (e) {
@@ -228,46 +228,26 @@ btnClose.addEventListener('click', function (e) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
     );
-    // console.log(index);
-    accounts.splice(index, 1); //Splice will mutate underlying array
+    console.log(index);
+    // .indexOf(23)
+
+    // Delete account
+    accounts.splice(index, 1);
 
     // Hide UI
     containerApp.style.opacity = 0;
-
-    console.log(`Account Deleted.`);
-  } else {
-    alert(`Incorrect Credentials Supplied`);
   }
 
-  inputCloseUsername.value = inputClosePin.value = ''; // set both fields to blank,
-  //Should this not need a check to ensure logged in user matches user we're closing?
-  // Otherwise one person could close everyone
+  inputCloseUsername.value = inputClosePin.value = '';
 });
 
 let sorted = false;
-
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovement(currentAccount.movements, !sorted); // do the opposite of sorted! I like this
+  displayMovements(currentAccount.movements, !sorted);
   sorted = !sorted;
 });
-// Create a username for each username in accounts array
-// for Each is the choice, as we do not want to create new array
-
-// Each function should recerive the data it will work with, rather than a global variable
-
-// The map method allowed us to make a simple array to contain initials of name it is used on
-// forEach is a great method to progress work without needing to return anything back.
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-
-//LECTURES
-
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
-
-/////////////////////////////////////////////////
+// LECTURES
