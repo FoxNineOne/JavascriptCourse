@@ -164,7 +164,7 @@ btnLogin.addEventListener('click', function (e) {
   );
   console.log(currentAccount);
 
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+  if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and message
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
@@ -182,7 +182,7 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
@@ -206,7 +206,7 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = +inputLoanAmount.value;
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -223,7 +223,7 @@ btnClose.addEventListener('click', function (e) {
 
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
@@ -251,3 +251,54 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+
+//Converting and checking numbers
+// In JS all numbers are represented internally as floating point numbers (deciamal;s)
+// Numbers are represented internally in a 64 base2 format
+// Numbers are always stored in a binary form
+
+//Base 10 (0 - 9)
+//Base 2 (0 - 1)
+
+// Because Base2, certain fractions return strange decimals
+// console.log(0.1 + 0.2);
+
+//Specific or financial calculations in JS can be difficult
+// console.log(0.1 + 0.2 === 0.3); //will return false
+
+// convert String to number
+console.log(Number('23'));
+console.log(+'23'); //will type convert to Number .. Looks cleaner!
+
+//parse number from a string!
+console.log(Number.parseInt('400px', 10)); // the argument 10 will infer it's a base10
+console.log(Number.parseInt('400px', 2)); // the argument 2 will infer Base2, binary
+// The string has to start with a number
+console.log(Number.parseInt('d400')); //Returns NaN
+
+console.log(Number.parseFloat(' 4.6rem'));
+console.log(Number.parseFloat(' 4.6rem', 2)); // the argument 2 will infer Base2, binary
+
+//These functions are actually global functions, so we don't need to call Number
+console.log(parseFloat(' 4.6rem'));
+// Although apparently, it's encouraged to use Number
+
+//isNaN - only use to check if a number or not
+console.log(Number.isNaN(20)); //false - it is not not-a-number
+console.log(Number.isNaN('20')); //false - it is not not-a-number
+console.log(Number.isNaN('20x')); //true - it is not a number
+
+console.log(Number.isNaN(23 / 0)); // This should return infinity.. but it didn't for me.
+
+//isFinite - use to check if a number
+console.log(Number.isFinite(23 / 0)); // TRhis returns false, it's in-finite!
+console.log(Number.isFinite(20)); // true - is finite
+console.log(Number.isFinite(20.67)); // true - is finite
+console.log(Number.isFinite('20')); // false - it is string.
+
+//Is finite is apparently the best method if a value is a real number (not string)
+
+//isInteger - check for integers only
+console.log(Number.isInteger(206)); // true - is integer
+console.log(Number.isInteger(20.67)); // false - is decimal
+console.log(Number.isInteger('20')); // false - it is string.
