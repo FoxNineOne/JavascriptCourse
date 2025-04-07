@@ -394,7 +394,7 @@ labelBalance.addEventListener('click', function () {
 */
 
 // Numberic Separators
-
+/*
 // 287,760,000,000
 const diameter = 287_460_000_000; // We can use separators to help read large numbers
 console.log(diameter); //returns 287460000000 - js ignores the separators
@@ -415,3 +415,102 @@ console.log(Number('230_000')); //returns NaN
 console.log(parseInt('230_000')); //returns 230, the 000 is ignored.
 // Only use numeric separators when dealing with numbers..
 // Numbers as strings should not use underscores.
+*/
+// Working iwth Big Int
+/*
+// Numbers are resepesented internall as 64 bits.. 64 1s or 0s to represent any number
+// only 53 are used to store the digits themselves
+// the rest are for the decimal point and sign
+// this means there is a limit.
+//Base 2, ence 2**
+console.log(2 ** 53 - 1);
+console.log(Number.MAX_SAFE_INTEGER);
+
+//any intgeer larger is not safe, and that means cannot be represented accurately
+console.log(2 ** 53 + 1); //should be 2 higher than console log above, not 1
+console.log(2 ** 53 + 2);
+
+// What if we need larger numbers?
+// with es2020 - bigInt came to town!
+
+console.log(9999999999999999999999999999999999999999n); //adding an N on the end will make bigInt
+console.log(BigInt(9999999999999999999999999999999999999999)); //Doesn't work..
+
+// Operations with bigInt numbers
+
+// All usual operators still work the same.
+
+console.log(10000n + 10000n);
+console.log(9999999999999999999999999999999999999999n * 100000000n);
+
+// Not possible to mix BigInt with regular numbers
+const huge = 9999999999999999999999999999999999999999n;
+const num = 23;
+//console.log(huge * num); //will error
+console.log(huge * BigInt(num));
+// Apparently this works but following the first example, I am skeptical
+
+//Comparioson Operators work
+console.log(20n < 15); // retruns false
+console.log(20n == 20); // returns true
+console.log(20n === 20); // returns false - correct as data types differ
+
+//String concatenations
+console.log(huge + ' is REALLY big!!!');
+
+//Math operators are not going to work
+
+// Divisions
+console.log(10n / 3n); //returns 3n - truncates decimal off
+console.log(10 / 3); //returns 3.333
+*/
+//Creating Dates
+
+// const now = new Date(); // this will push the current timestamp
+
+// console.log(now);
+
+// console.log(new Date('September 08 1991 20:00:00'));
+// console.log(new Date('December 24, 2015'));
+// console.log(new Date('2000-01-01'));
+// console.log(new Date('08/09/2000')); // It's fucking american... that's upset me.
+// console.log(new Date('2000-09-08'));
+// console.log(new Date(account1.movementsDates[0]));
+
+// console.log(new Date(2057, 10, 19, 15, 23, 5)); //10 is november? so is month counting from 0?
+// console.log(new Date(2057, 0, 0, 15, 23, 5)); //it is 0 based.. but on month.. it's a bit of a mess to be honest
+
+// //Jan 1 1970 - earliest date?
+// console.log(new Date(0));
+// // 3 days later?
+// console.log(new Date(3 * 24 * 60 * 60 * 1000));
+// //3 days, made of 24 hours, made of 60 minutes, 60 seconds, 1000 milliseconds
+// //This isn't fully sinking in yet.. may need to return
+
+// // Dates have their own methods
+
+const future = new Date(2037, 10, 19, 15, 23);
+console.log(future);
+console.log(future.getFullYear()); // returns 2037
+//console.log(future.getYear()); // Dont use this.. not sure why
+console.log(future.getMonth());
+console.log(future.getDate()); // to return Date of month
+
+// 0 based!!!
+console.log(future.getDay()); // returns day of the week
+console.log(future.getHours());
+console.log(future.getMinutes());
+console.log(future.getSeconds());
+
+// 2037-11-19T15:23:00.000Z
+console.log(future.toISOString()); //Returns that date format we see in Mongodbs.. bleh
+
+console.log(future.getTime()); //returns 2142256980000 - milliseconds that have past since earliest date (Jan 1970)
+console.log(new Date(2142256980000)); // returns Thu Nov 19 2037 15:23:00 GMT+0000 (Greenwich Mean Time)
+
+//Method to get timestamp for right now.
+console.log(Date.now());
+
+//Change the year but keep month and date of month
+future.setFullYear(2040);
+console.log(future);
