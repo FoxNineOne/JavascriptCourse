@@ -9,6 +9,8 @@
 
 // DIFFERENT DATA! Contains movement dates, currency and locale
 
+// I don't fully trust the sort here.. it sorts by value of movement.. I think it should reverse the chronolocial.. I might change this to what I want it to be :)
+
 const account1 = {
   owner: 'Shaheen Shaikh',
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
@@ -191,16 +193,46 @@ const updateUI = function (acc) {
 
   // Display summary
   calcDisplaySummary(acc);
+
+  //Reset timer as action has taken place
+  clearInterval(timer);
+  timer = startLogOutTimer();
+};
+
+const startLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0); //convert integers to minutes
+    const sec = String(time % 60).padStart(2, 0);
+
+    // In each call, print the remainign time to UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    // When 0 , stop timer and initiate log out
+    if (time === 0) {
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = `Log in to get started`;
+      clearInterval(timer);
+    }
+    //Reduce remaining time by 1
+    time--;
+  };
+  //Set time to 2 minutes
+  let time = 120; // inseconds
+  // Call the timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+  // Call timer every second
 };
 
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
-// FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// // FAKE ALWAYS LOGGED IN
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -218,14 +250,7 @@ btnLogin.addEventListener('click', function (e) {
     }`;
     containerApp.style.opacity = 100;
 
-    //Create current date and time
-    // const now = new Date();
-    // const day = now.getDate().toString().padStart(2, '0');
-    // const month = `${now.getMonth() + 1}`.padStart(2, '0'); // same effect as toString()
-    // const year = now.getFullYear();
-    // const hour = now.getHours().toString().padStart(2, '0');
-    // const min = now.getMinutes().toString().padStart(2, '0');
-    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+    // Start Timer
 
     //Experimenting with the Intl API
     const now = new Date();
@@ -246,6 +271,10 @@ btnLogin.addEventListener('click', function (e) {
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
+
+    // Timer
+    if (timer) clearInterval(timer); //if timer already existrs, clear, to avoid issues when switching users
+    timer = startLogOutTimer();
 
     // Update UI
     updateUI(currentAccount);
@@ -285,12 +314,15 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
-    currentAccount.movementsDates.push(new Date().toISOString());
+    setTimeout(function () {
+      // Add movement
+      currentAccount.movements.push(amount);
+      //Add loan date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // Update UI
-    updateUI(currentAccount);
+      // Update UI
+      updateUI(currentAccount);
+    }, 2500);
   }
   inputLoanAmount.value = '';
 });
@@ -324,7 +356,3 @@ btnSort.addEventListener('click', function (e) {
   displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES

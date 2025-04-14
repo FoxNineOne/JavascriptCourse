@@ -600,4 +600,51 @@ console.log(
 );
 
 //Currency cannot be defined by locale. We have to define manually
-// Is there not a lubrary for this? Geo assume US is USD, GB is GBP etc..?
+// Is there not a library for this? Geo assume US is USD, GB is GBP etc..?
+
+// Set TIMEOUT
+
+//we can use setTimeout to execute some code after a specific time period
+setTimeout(() => console.log(`Here is your pizza 🍕`), 3000); //3 seconds, 3000 milliseconds
+// Essentially delayed a console log by 3 seconds from execution
+
+//The code execution does not stop at this point
+// When the execution of the code.. it'll call the setTimeout, then register the callback to run later
+console.log(`Waiting....`); // This will log BEFORE setTimeout above
+// This is known as asynchronous Javascript (heard of this in migration tool)
+
+//What if we needed to pass arguments?
+setTimeout(
+  (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2} 🍕`),
+  3000,
+  'olives',
+  'spinach'
+);
+
+//
+const ingredients = ['chekken', 'shosij'];
+const pizzaTimer = setTimeout(
+  (ing1, ing2) => console.log(`Here is your pizza with ${ing1} and ${ing2} 🍕`),
+  3000,
+  ...ingredients //spread array
+);
+
+if (ingredients.includes('spinach')) {
+  clearTimeout(pizzaTimer);
+  console.log(`spinach detected.. aborting order!`);
+}
+
+// what if we want to run over and over again, like everyt 5 seconds or 10 minutes?
+//Set Interval!!
+
+let intX = 10;
+const timerTest = setInterval(function () {
+  const now = new Date();
+  console.log(now);
+  intX--;
+  console.log(intX);
+  if (intX === 0) {
+    console.log('all over now');
+    clearInterval(timerTest);
+  }
+}, 1000);
