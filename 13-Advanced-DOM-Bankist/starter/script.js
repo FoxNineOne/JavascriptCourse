@@ -29,9 +29,57 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-////////////////////////////////////////////////
-//LECTURES
+// Scroll to click event
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+btnScrollTo.addEventListener('click', function (e) {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+  console.log(e.target.getBoundingClientRect());
+  // with what is returned.. "top" is ALWAYS same as "y"
+  // "left is also always the same as "x"
 
+  // Deprecated
+  //console.log('Current scroll X/Y', window.pageXOffset, pageYOffset);
+  //scrollx and scrolly are the future!
+  console.log('Current scroll X/Y', window.scrollX, window.scrollY);
+  // When clicked, the Y returned  measures the total distance from the current viewport and the top of the page.
+
+  // Return back the height and width of the viewport
+  console.log(
+    'height/width of viewport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  //Scrolling
+  // first argument is the left position
+  // second is the top
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+  //This will stutter and move as the s1coords are relative to viewport
+  // By adding the PageyOffset, the position passed is relative to the document, the entire page.
+
+  //We can make the movement smoother
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  //more modern! less code only works in modern browsers.
+  section1.scrollIntoView({ behavior: 'smooth' });
+
+  //It was introduced in 2001, but the behavior argument is 2017 onwards
+
+  //I'd assume it'd be rare to see someone rocking a pre-2017 browser now
+});
+
+////////////////////////////////////////////////
+//                  LECTURES
+////////////////////////////////////////////////
 // The DOM (Document Object Model) is the interface between js and the Browser
 // We can write Javascript to create, modify and delete HTML elements
 // We can set styles, classess, atrributes
@@ -98,6 +146,7 @@ MDN documentation will explain more.. (youtube might be easier)
 // document is not enough, we need .documentElement
 // document is not the real DOM element
 // if we want to affect css styling , we need .documentElement
+/*
 console.log(document.documentElement);
 console.log(document.head);
 console.log(document.body);
@@ -223,4 +272,145 @@ logo.classList.toggle('c1');
 logo.classList.contains('c2'); //contains for this, includes for Arrays
 
 // Don't use as it'll overwrite ALL existing classes, the above are less destructive
-logo.className = 'Jiji';
+//logo.className = 'Jiji';
+*/
+
+/*
+
+Codewars break!
+
+Your job is to write a simple password validation function, as seen on many websites.
+
+The rules for a valid password are as follows:
+
+There needs to be at least 1 uppercase letter.
+There needs to be at least 1 lowercase letter.
+There needs to be at least 1 number.
+The password needs to be at least 8 characters long.
+Your function takes a string argument and returns whether it is a valid password, as a boolean. 
+
+
+function password(str) {
+  const chars = [...str];
+  //validate password
+  // There needs to be at least 1 uppercase letter.
+  const hasUpper = chars.some(c => c >= 'A' && c <= 'Z');
+  // There needs to be at least 1 lowercase letter.
+  const hasLower = chars.some(c => c >= 'a' && c <= 'z');
+  // There needs to be at least 1 number.
+  const hasDigit = chars.some(c => c >= '0' && c <= '9');
+  // The password needs to be at least 8 characters long.
+  return str.length >= 8 && hasUpper && hasLower && hasDigit;
+}
+
+*/
+//EVENT THINGS
+/*
+// An event is basically a signal by a specific DOM node
+let h1Limit = 1;
+const h1 = document.querySelector('h1');
+const alertH1 = function (e) {
+  alert('addEventListener: Great! You are reading the heading!');
+  if (h1Limit >= 3) {
+    // We can remove the event listener
+    h1.removeEventListener('mouseenter', alertH1);
+  }
+  h1Limit++;
+  console.log(h1Limit);
+};
+h1.addEventListener('mouseenter', alertH1);
+*/
+// Old skool way , modern way is addEventListener
+// h1.onmouseenter = function (e) {
+//   if (h1Limit < 3) {
+//     alert('addEventListener: Great! You are reading the heading!');
+//   }
+//   h1Limit++;
+// };
+
+// addEventListener because of reasons
+// one being, we can add and remove multiple event listeners to the same event
+// we
+
+//Check Line 46 of index.html
+//  <h1 onclick="alert('HTML alert!')">
+// This will trigger on click of h1 class elements
+
+// Event Propragation : Bubbling and Capturing
+
+// CAPTURING PHASE STARTS   from Document down through , HTML, BODY, SECTGION, Paragraph , Img, Link
+// to  the TARGET, and we hit TARGET PHASE
+// BUBBLING goes in reverse from TARGET, through parent elements to DOCUMENT
+// It does not pass through sibling elements
+
+// Bubbling and Capturing are the two phases of propagation. In their simplest definitions, bubbling travels from the target to the root,
+// and capturing travels from the root to the target.
+
+// Important to know because basically it's as ig the event happened in each of the parent elements
+
+// If we attach swame event listener to a and section element, we'd get same alert window from both.
+// This behaviour will allow us to make impressive patterns
+
+//By default, events can only be handled in the target, or the bubbling phase
+// However, we can set up event listeners in a way that they listen to events in the capturing phase instead
+
+// Not all types of events have a capture/bubble phase. some are created right on the target element.
+
+// Events propogate
+// Propagation refers to how events travel through the
+//  Document Object Model (DOM) tree.
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+const randomColour = () =>
+  `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
+//console.log(randomColour(0, 255));
+
+document.querySelector('.nav__link').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColour(0, 255);
+  console.log('Link', e.target, e.currentTarget);
+  // console.log(e.currentTarget === this); // e.target is same as "this"
+
+  // Stop propogation
+  //e.stopPropagation();
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColour(0, 255);
+  console.log('Container', e.target, e.currentTarget);
+});
+
+document.querySelector('.nav').addEventListener(
+  'click',
+  function (e) {
+    this.style.backgroundColor = randomColour(0, 255);
+    console.log('Nav', e.target, e.currentTarget); //Where the event originated, where it first happened
+  } //,  true
+);
+
+// The reason teh same e.target is returned is because all three events trigger from teh same target
+// the target bubbles up through the parents triggering all the events.
+
+// Current target will show the current target (i.e where the eventListener triggers from)
+
+//We can stop event propogation with   e.stopPropagation();
+// This will stop the bubbling up to parent elements.
+
+// In practise, not usually a good idea.
+
+// Events are captured when they come down from Document root, to Target
+// event handlers are not picking up events during capture phase
+// add event listener is for bubbling phase - by default
+
+// Whereas Bubbling is useful for event delegation
+// Capturing is usually irrelevant, not much use
+
+// If we really want to catch events during the capture phase
+// we can define a third parameter in addEventListener function (boolean)
+
+//The above example's behaviour looks the same, but if you check the log when event fires, you'll see the parent console log is returned first, then the next child, and so on until root.
+// This is in reverse.. or morese in the Capture order, compared to the default (Bubbling)
+
+//This is because the Nav Event is now listening for the event as it travels from teh DOM, but the other two are listening as the event travels back up (bubbling)
+// Therefore, NAV is first to show up! 🏁
