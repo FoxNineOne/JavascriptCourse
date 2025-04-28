@@ -6,6 +6,12 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const nav = document.querySelector('.nav');
+
+// Tabbed component
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContent = document.querySelectorAll('.operations__content');
+const tabsContainer = document.querySelector('.operations__tab-container');
 
 ///////////////////////////////////////
 // Modal window
@@ -67,9 +73,62 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
 });
 
+//Doing this is bad practise..
+//tabs.forEach(t => t.addEventListener('click', () => console.log('Tab')));
+
+//Event delegation
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+  //Ignore clicks where result = null
+  if (!clicked) return;
+  // Known as a guard clause
+
+  //Remove active tab
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  // Remove active content
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  //Activate Tab
+  clicked.classList.add('operations__tab--active');
+
+  //Activate Conent Area
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+// Menu fade animation
+const handleHover = function (e, opacity) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+// Passing "argument" into handler
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+const initialCoords = section1.getBoundingClientRect();
+
+//Sticky Navigation // This "freezes" the navigation bar once we reach Section 1
+window.addEventListener('scroll', function (e) {
+  console.log(window.scrollY);
+  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+}); //each time we scroll, this fires
+
 // ////////////////////////////////////////////////
 // //                  LECTURES
 // ////////////////////////////////////////////////
+
 // // The DOM (Document Object Model) is the interface between js and the Browser
 // // We can write Javascript to create, modify and delete HTML elements
 // // We can set styles, classess, atrributes
