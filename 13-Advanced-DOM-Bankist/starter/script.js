@@ -118,12 +118,80 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 const initialCoords = section1.getBoundingClientRect();
 
-//Sticky Navigation // This "freezes" the navigation bar once we reach Section 1
-window.addEventListener('scroll', function (e) {
-  console.log(window.scrollY);
-  if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
-  else nav.classList.remove('sticky');
-}); //each time we scroll, this fires
+// //Sticky Navigation // This "freezes" the navigation bar once we reach Section 1
+// window.addEventListener('scroll', function (e) {
+//   console.log(window.scrollY);
+//   if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// }); //each time we scroll, this fires
+
+// Intersection Observer API
+// What is?
+// Allows our codee to observe changes to the way that a certain tatarget elements intersects a certain other element, or it inserects the viewport.
+
+// Sticky Nav
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect();
+const stickyNav = function (entries) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
+  }
+};
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight.height}px`,
+});
+headerObserver.observe(header);
+
+// Reveal Sections
+const allSections = document.querySelectorAll('.section');
+const revealSection = function (entries, observer) {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.remove('section--hidden');
+    observer.unobserve(entry.target); //This switches off the observer on affected targets
+  });
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.25,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
+
+//Lazy Loading Images
+const imgTargets = document.querySelectorAll('img[data-src]'); //All Images that have a property of "data src"
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  //Replace src attribute with data-src
+  entry.target.src = entry.target.dataset.src;
+
+  //Await for data-src image to load.
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px',
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
 
 // ////////////////////////////////////////////////
 // //                  LECTURES
@@ -512,60 +580,75 @@ window.addEventListener('scroll', function (e) {
 // DOM Traversing
 // Navigating and manipulating the DOM (the heirachy of elements in a HTML doc)
 /*
-const h1 = document.querySelector('h1');
-// Going downards (selecting child elements)
-//Query selector also works on elements not just documents
-console.log(h1.querySelectorAll('.highlight'));
-// The above will only show the 2 highlight class element of the h1 parent
-// It will not pick up highlight classes anywhere else in the page
-
-console.log(h1.childNodes);
-//gives us every single node of every type that exists
-
-console.log(h1.children);
-//returns 3 elements, span, br, span.
-// Only works for direct children
-
-//This will upodate the first child element of the h1 parent element
-h1.firstElementChild.style.color = 'white';
-// and the inverse, the last child element
-h1.lastElementChild.style.color = 'blue';
-
-console.log(h1.parentNode);
-// returns the direct parent node of h1
-
-console.log(h1.parentElement);
-// This currently returns same as parent element is a node.
-
-// Find a (grand?) parent element, no matter how far in the DOM tree
-
-// //use the CSS selector for the class "header"
-// h1.closest('.header').style.background =
-//   'linear-gradient(to top left, #ffb003, #ffcb03)';
-
-// // if you use the same class as root, you will get the root element
-// h1.closest('h1').style.background =
-//   'linear-gradient(to top left, #ffb003, #ffcb03)';
-
-// Select siblings
-// we can only access direct siblings (previous, and next one)
-
-// find sibling elements
-console.log(h1.previousElementSibling); // returns NULL, H1 is the first child
-console.log(h1.nextElementSibling); // returns H4 element which is next child
-
-// select any sibling node
-console.log(h1.previousSibling); // returns  #text
-console.log(h1.nextSibling); // returns #text
-
-// if we need ALL the siblings
-// go up to parent, then list children
-console.log(h1.parentElement.children);
-[...h1.parentElement.children].forEach(function (el) {
-  if (el !== h1) el.style.transform = 'scale(1.05)';
-});
-*/
+                            const h1 = document.querySelector('h1');
+                            // Going downards (selecting child elements)
+                            //Query selector also works on elements not just documents
+                            console.log(h1.querySelectorAll('.highlight'));
+                            // The above will only show the 2 highlight class element of the h1 parent
+                            // It will not pick up highlight classes anywhere else in the page
+                            
+                            console.log(h1.childNodes);
+                            //gives us every single node of every type that exists
+                            
+                            console.log(h1.children);
+                            //returns 3 elements, span, br, span.
+                            // Only works for direct children
+                            
+                            //This will upodate the first child element of the h1 parent element
+                            h1.firstElementChild.style.color = 'white';
+                            // and the inverse, the last child element
+                            h1.lastElementChild.style.color = 'blue';
+                            
+                            console.log(h1.parentNode);
+                            // returns the direct parent node of h1
+                            
+                            console.log(h1.parentElement);
+                            // This currently returns same as parent element is a node.
+                            
+                            // Find a (grand?) parent element, no matter how far in the DOM tree
+                            
+                            // //use the CSS selector for the class "header"
+                            // h1.closest('.header').style.background =
+                            //   'linear-gradient(to top left, #ffb003, #ffcb03)';
+                            
+                            // // if you use the same class as root, you will get the root element
+                            // h1.closest('h1').style.background =
+                            //   'linear-gradient(to top left, #ffb003, #ffcb03)';
+                            
+                            // Select siblings
+                            // we can only access direct siblings (previous, and next one)
+                            
+                            // find sibling elements
+                            console.log(h1.previousElementSibling); // returns NULL, H1 is the first child
+                            console.log(h1.nextElementSibling); // returns H4 element which is next child
+                            
+                            // select any sibling node
+                            console.log(h1.previousSibling); // returns  #text
+                            console.log(h1.nextSibling); // returns #text
+                            
+                            // if we need ALL the siblings
+                            // go up to parent, then list children
+                            console.log(h1.parentElement.children);
+                            [...h1.parentElement.children].forEach(function (el) {
+                              if (el !== h1) el.style.transform = 'scale(1.05)';
+                              });
+                              */
 
 // Building Tabbed Component
 
 //
+
+// const obsCallback = function (entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   });
+// };
+
+// const obsOptions = {
+//   root: null, //the element the target will itersect with //null defaults to viewport!
+//   //threshold: 0.1, //% of intersection
+//   threshold: [0, 0.2], // You can have multiple thresholds
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
