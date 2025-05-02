@@ -193,6 +193,18 @@ const imgObserver = new IntersectionObserver(loadImg, {
 
 imgTargets.forEach(img => imgObserver.observe(img));
 
+//Slider
+const slides = document.querySelectorAll('.slide');
+
+const slider = document.querySelector('.slider');
+slider.style.transform = 'scale(0.4) translateX(-1200px)';
+slider.style.overflow = 'visible';
+
+slides.forEach(
+  (s, i) => (s.style.transform = `translateX(${100 * i}%)`)
+  // 0,100%,200%,300%
+);
+
 // ////////////////////////////////////////////////
 // //                  LECTURES
 // ////////////////////////////////////////////////
