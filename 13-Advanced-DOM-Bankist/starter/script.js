@@ -194,16 +194,114 @@ const imgObserver = new IntersectionObserver(loadImg, {
 imgTargets.forEach(img => imgObserver.observe(img));
 
 //Slider
-const slides = document.querySelectorAll('.slide');
 
-const slider = document.querySelector('.slider');
-slider.style.transform = 'scale(0.4) translateX(-1200px)';
-slider.style.overflow = 'visible';
+const slider = function () {
+  const slides = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const dotContainer = document.querySelector('.dots');
+  let curSlide = 0;
+  const maxSlide = slides.length;
+  const slider = document.querySelector('.slider');
 
-slides.forEach(
-  (s, i) => (s.style.transform = `translateX(${100 * i}%)`)
-  // 0,100%,200%,300%
-);
+  // FUNCTIONS
+  const createDots = function () {
+    slides.forEach(function (_, i) {
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  const activeDot = function (slide) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  const goToSlide = function (slide) {
+    activeDot(slide);
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+    );
+  };
+
+  //Go to next slide
+  const nextSlide = function () {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
+    goToSlide(curSlide);
+    //activeDot(curSlide);
+  };
+
+  const prevSlide = function () {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+    goToSlide(curSlide);
+    //activeDot(curSlide);
+  };
+
+  // Initialise
+  const init = function () {
+    createDots();
+    goToSlide(0);
+    //The course guy says the activeDot should be all the slide movement functions.. but it always follows goToSlide?
+    // So why not incorporate it once.. inside the goToSlide function?
+  };
+  init();
+
+  // Event Handlers
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+
+  document.addEventListener('keydown', function (e) {
+    //Short circuiting - instead of if function.
+    e.key === 'ArrowLeft' && prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
+  });
+
+  dotContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')) {
+      console.log('DOOT');
+      curSlide = Number(e.target.dataset.slide);
+      goToSlide(curSlide);
+      // activeDot(curSlide);
+    }
+  });
+};
+
+slider();
+
+// Lifecycle = the moment the page is loaded until viewer/user leaves page
+// This is fired once the HTML is compeltelyh parsed
+// All scripts must be downloaded and executed before the DOM Content loaded is executed.
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML Parsed, and DOM tree built', e);
+});
+
+//load event, fired by window when HTML has parsed, all images and CSS has loaded.
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded');
+});
+
+// This will fire before a user leaves the paoge
+// returnValue is fully deprecated = it doesn't fire here.
+// window.addEventListener('bgeforeunload', function (e) {
+//   e.preventDefault();
+//   console.log(e);
+//   e.returnValue = 'message';
+// });
 
 // ////////////////////////////////////////////////
 // //                  LECTURES
@@ -664,3 +762,53 @@ slides.forEach(
 
 // const observer = new IntersectionObserver(obsCallback, obsOptions);
 // observer.observe(section1);
+
+/*
+
+//SCRIPT LOADING
+
+if using <script src="script.js"> </script> on the html, it is best to have this at the end of the body
+section, to ensure the HTML is parsed first. otherwise, placing this in the head will mean the HTML will wait for the js
+script to be fetched and executed before finishing parsing.
+
+Placing this in the body means the HTML is fully parsed, then fetch, the njs execute.
+
+With these two methods above, the DOMContent loaded event will wait for all HTML to be parsed and scripts to be loaded before intiating.
+
+You can use it in the head with the argument ASYNC or DEFER.
+
+async will have the script be fetched asynchronously to the HTML being parsed, and then the HTML will wait as the js script will be executed immediately.
+The execution can still impact HTML parsing.
+With async, the DOMContentLoaded event will not wait for an async script to load. 
+
+DOMContentLoaded can kick in whilst the async script is still being fetched.
+
+Additionally, async scripts may not be executed in the exact order they are declared
+
+Defer will fetch the script asynchronously, but the execution of the js will kick in once HTML has been fully parsed.
+This may be useful. but at this point in my experience, I'm not sure why.
+I think it's possible that defer in head may wield faster total load times to End of Body. 
+
+The DOMContentLoaded event fires after defer scripts are executed.
+Defer scripts are executed in order of declaration.
+
+
+async and defer  are not used in the body section, as it makes no sense for them to be.
+
+
+Using Defer in html head seems best solution out of these.
+Best to use for own scripts, when order is important.
+Can be great if using 3rd party librariess you need loading up first. 
+
+For 3rd party scripts where order does not matter (such as Google analytics) , async is suitable
+
+Different loading strategies are handy for different script/page requirements
+
+
+
+A twist: only mordern browsers support async and defer, and these will get ignored in older browsers.
+To support old browsers.. put script tag at end of body, and not in the head.
+
+It's not a js feature, it's a HTML5 feature.
+
+*/
