@@ -133,7 +133,7 @@ const Person = function (firstName, birthYear) {
 };
 
 const jiji = new Person('Jiji', 1991);
-console.log(jiji);
+// console.log(jiji);
 
 // Behind the scenes 4 steps
 
@@ -145,14 +145,14 @@ console.log(jiji);
 const matilda = new Person('Matilda', 2017);
 const keith = new Person('Keith', 1999);
 
-console.log(matilda, keith);
+// console.log(matilda, keith);
 
 //We've created 3 instances of person and can confirm this with the below:
 //console.log(jiji instanceof Person); //returns true
 //console.log(jiji.calcAge);
 
 // PROTOTYPES
-console.log(Person.prototype);
+// console.log(Person.prototype);
 // Each and every function in javascript automatically has a property called Prototype
 // Every object that is created by a certain constructor function, will get access to all the methods and properties that we define on the constructor's prototype property
 
@@ -161,27 +161,120 @@ Person.prototype.calcAge = function () {
 };
 
 // This isn't on the jiji object, but prototypal inheritance means we can call it!
-jiji.calcAge();
+// jiji.calcAge();
 
 // This is much more performant, as to add the method in after stops it being copied to every instance object, yet they can all use the one that exists at constructor level
 
 // Any object always has access to the methods and properties from its prototype
-console.log(jiji.__proto__);
+// console.log(jiji.__proto__);
 
 // The protoype of the jiji obect is essentially the prototype property of the constructor function
-console.log(jiji.__proto__ === Person.prototype);
-console.log(Person.prototype.isPrototypeOf(jiji));
+// console.log(jiji.__proto__ === Person.prototype);
+// console.log(Person.prototype.isPrototypeOf(jiji));
 //Person . prototype is not actually the prototype of Person,
 // but the prototype that will be used to objects created with the Person constructor function.
 
 // we can also set properties on the prototype, which instances will inherit.
 Person.prototype.species = 'Homo Sapiens';
-console.log(jiji);
-console.log(matilda);
+// console.log(jiji);
+// console.log(matilda);
 
 // Inherited objects are not directly in the object, it's not its own property.
 // Own properties are the only ones declared in the object directly iteself
 // We can check for this
 
-console.log(jiji.hasOwnProperty('firstName')); //returns true - own property
-console.log(jiji.hasOwnProperty('species')); // returns false - inherited, protoyupe property, not object property
+// console.log(jiji.hasOwnProperty('firstName')); //returns true - own property
+// console.log(jiji.hasOwnProperty('species')); // returns false - inherited, protoyupe property, not object property
+
+/* 
+
+Person consturctor function
+has a prototype property wqhich is an object, and inside that object, we define the calcAge method.
+person.prototype has a refrence back to person, which is the consturctor property
+person.prototoyupe.constructor is gonna point back to person itself
+person.prototype is not the prototype of person, but all the objects that are created through the person function.
+
+
+When we call a function with the new opersator, the first thing is
+new empty object is created
+then the this keyword is set to the new created object
+thats why in the functions code, we set the birithyear and name on the this keyword.
+doing so sets them on the new objects
+
+the new object is now linked to the constructor function's prototype property (Person.prototype  jiji.__proto__)
+
+The new wobject i9s returned from the function - unless we explicitlyreturn something else. In a constructor function like Person, we ususally never do that.
+
+The result of the new operator and person  constructor function is a new object that we've created programittically.
+
+This is useful because we can call jiji.calcAge(), even though it's not in the objects content. 
+It is in the prototype, so calcAge works because of this. jiji inherits prototype, or Person delegated calcAge() to jiji.
+
+
+This is essential for code performance, if there was 1000 instances, the alternative is the function being copied to each one, that's 1000 in heap.
+So this way, there's 1 function, that can be accessed and executed by 1000 instances.
+
+
+
+person.prototype itself is also an object
+All objects in javascript have a prototype
+The prototype for person.prototybe is object.prototype
+
+Because person.prototype is just a simple object, which means it has been built by the object() constructor function.
+This function is called behind the scenes whenever we create an object literal (an object with curly braces {} )
+
+Person.prototype itself needs to have a prototype, so as it's an object, and created with Object() constructor, it is object.prototype
+
+jiji.prototype => person.prototype => object.protoytype => null
+This relationsip of protytpes is called the prototype chain
+
+object.prototype is usually the top of the chain. 
+Null marks the end of the chain.
+
+Prototype chain is similar to scope chain, but for prototypes
+In the scope chain, when js can't find a variable in a certain scope, it looks up to the next scope in the scope chain to find the variable there.
+Prototype behaviour is the same here.
+
+// hasOwnProperty
+jiji.haswOwnProperty('name');
+
+js is going to start looking for this method on jiji, but can't find it. 
+It'll then look at Person.prototype. 
+It is not there
+It will then look into object.prototype, and will find it there.
+hasOwnProperty is one of these stored methods. Therefore, this can be used.
+
+
+*/
+//Person..prototype
+console.log(jiji.__proto__);
+// object.prototype
+console.log(jiji.__proto__.__proto__);
+// NULL - nothying above object.prototype
+console.log(jiji.__proto__.__proto__.__proto__);
+
+console.dir(Person.prototype.constructor);
+
+// Prototype of arrays
+const arr = [3, 6, 2, 4, 64, 4, 4, 5, 8, 5, 3];
+console.log(arr.__proto__);
+console.log(arr.__proto__ === Array.prototype);
+console.log(arr.__proto__.__proto__);
+
+//Add a new method to the prototype
+Array.prototype.unique = function () {
+  return [...new Set(this)];
+};
+
+// All arrays inherit this
+// console.log(arr.unique());
+
+// This isn't good practise but we can do it.. just not good practise
+
+// const h1 = document.querySelector('h1');
+// console.dir(h1);
+
+//Prototype of a function
+
+//console.log();
+console.dir(x => x + 1);
