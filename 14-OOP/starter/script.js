@@ -145,6 +145,15 @@ const jiji = new Person('Jiji', 1991);
 const matilda = new Person('Matilda', 2017);
 const keith = new Person('Keith', 1999);
 
+Person.hey = function () {
+  console.log(`Hey there👋🏽`);
+  //console.log(this);
+};
+
+Person.hey(); // Returns
+
+//jiji.hey(); //Does not return as it is not inherited.
+
 // console.log(matilda, keith);
 
 //We've created 3 instances of person and can confirm this with the below:
@@ -246,35 +255,278 @@ hasOwnProperty is one of these stored methods. Therefore, this can be used.
 
 
 */
-//Person..prototype
-console.log(jiji.__proto__);
+// Person..prototype
+// console.log(jiji.__proto__);
 // object.prototype
-console.log(jiji.__proto__.__proto__);
+// console.log(jiji.__proto__.__proto__);
 // NULL - nothying above object.prototype
-console.log(jiji.__proto__.__proto__.__proto__);
+// console.log(jiji.__proto__.__proto__.__proto__);
 
-console.dir(Person.prototype.constructor);
+// console.dir(Person.prototype.constructor);
 
 // Prototype of arrays
 const arr = [3, 6, 2, 4, 64, 4, 4, 5, 8, 5, 3];
-console.log(arr.__proto__);
-console.log(arr.__proto__ === Array.prototype);
-console.log(arr.__proto__.__proto__);
+// console.log(arr.__proto__);
+// console.log(arr.__proto__ === Array.prototype);
+// console.log(arr.__proto__.__proto__);
 
-//Add a new method to the prototype
+// Add a new method to the prototype
 Array.prototype.unique = function () {
   return [...new Set(this)];
 };
 
 // All arrays inherit this
-// console.log(arr.unique());
+console.log(arr.unique());
 
 // This isn't good practise but we can do it.. just not good practise
 
-// const h1 = document.querySelector('h1');
+const h1 = document.querySelector('h1');
 // console.dir(h1);
 
 //Prototype of a function
 
 //console.log();
-console.dir(x => x + 1);
+// console.dir(x => x + 1);
+
+/*  CODING CHALLENGE  #1 */
+/* 1. Use a constructor function to implement a 'Car'. A car has a 'make' and a
+'speed' property. The 'speed' property is the current speed of the car in
+km/h  */
+
+// const Car = function (make, speed) {
+//   this.make = make;
+//   this.speed = speed;
+// };
+
+// const jijiCar = new Car('Civic', 180);
+
+/* 2. Implement an 'accelerate' method that will increase the car's speed by 10,
+and log the new speed to the console */
+
+// Car.prototype.accelerate = function () {
+//   this.speed += 10;
+//   console.log(
+//     `Acceleration applied on ${this.make}. New speed is ${this.speed} km/h`
+//   );
+// };
+
+// jijiCar.accelerate();
+
+/* 3. Implement a 'brake' method that will decrease the car's speed by 5, and log
+the new speed to the console */
+
+// Car.prototype.brake = function () {
+//   this.speed -= 5;
+//   console.log(
+//     `Brakes applied on ${this.make}. New speed is ${this.speed} km/h`
+//   );
+// };
+
+// jijiCar.brake();
+
+/* 4. Create 2 'Car' objects and experiment with calling 'accelerate' and
+'brake' multiple times on each of them */
+
+// const matizCar = new Car('Matiz', 32);
+// const sillyCar = new Car('Silly', 454);
+
+// console.log(sillyCar);
+// sillyCar.accelerate();
+// sillyCar.accelerate();
+// sillyCar.accelerate();
+// console.log(sillyCar);
+
+// const dataCar1 = new Car('BMW', 120);
+// const dataCar2 = new Car('Mercedes', 95);
+
+/* Test data:
+§ Data car 1: 'BMW' going at 120 km/h
+§ Data car 2: 'Mercedes' going at 95 km/h
+
+*/
+
+// dataCar1.accelerate();
+// dataCar2.brake();
+
+// ES6 Classes
+
+// Classes in js do not like classess in Java or C++
+// Still implement prototypal inheritance
+// Classes are just a special type of function, therefore we have expressions, and declarations
+
+// Class Expression
+// const PersonCl = class{}
+
+// Class Declaration
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+  //writing methods inside the class, but outside the constructor
+  // will be on prototype of the object - not on the object iself.
+  // Prototypal inheritance!
+
+  // Instance Methods
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+  //Commas are not used between method declarations
+  greet() {
+    console.log(`Hey ${this.fullName}!`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  //Setting a property that already exists
+  // Data validation - check if full name is supplied by looking for a space
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    // The underscore is to stop the max stack loop error.
+    else alert(`${name} is not a full name!`);
+  }
+  // as we had create a new variable, the below will return the fullname variable with updated value.
+  get fullName() {
+    return this._fullName;
+  }
+
+  // Static Methods
+  static hey() {
+    console.log(`Well, hello there 👋🏽`);
+    console.log(this);
+  }
+}
+
+const jessica = new PersonCl('Jessica Burger', 1996);
+console.log(jessica);
+console.log(jessica.__proto__ === PersonCl.prototype); // This acts like any other function constructor
+jessica.calcAge();
+/*
+PersonCl.prototype.greet = function () {
+  console.log(`Hey ${this.firstName}!`);
+};
+*/
+jessica.greet();
+
+const walter = new PersonCl('Walter White', 1965);
+
+// 1) Classess are NOT hoisted, even if they're class declarations
+// Functions are hoisted, wew can use them before they're declared in the code
+
+// 2) Just like functions classess are first-class citizens.
+// We can pass them into functions and return them from functions.
+
+// 3) The code in a class is always executed in strict-mode
+
+// Constructor or Class?
+// Constructor functions are not deprecated, so constructors are fine to use
+// It's personal preference currently.
+
+// Don't use Classes if you don't understand prototypal inheritance.
+
+//Classess can look tidier, as the methods can sit inside the declaration but outside the constructor.
+// Constructors can become detached and a little less easier to read.
+
+// GETTER AND SETTERS
+
+// Every object in js can have "getter" or "setter" properties,
+// we call these special properties "assessor properties" whilst the other properties are called "data properties"
+
+const account = {
+  owner: 'Jiji',
+  movements: [200, 250, 450, 120],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(movement) {
+    this.movements.push(movement);
+  },
+};
+console.log(account.latest); //called as a property, not a function
+
+//This will push 50 to the movements array , rather than call the method
+account.latest = 50;
+
+console.log(account.movements);
+
+console.log(jessica.age);
+
+// Setters and Getters can be useful for data validation when creating a new object
+// We don't need to use getter or setters but they are useful.
+
+// STATIC METHODS
+
+// Array.from is a static method
+
+// Array.from converts an array like structure to an array
+const arr1 = Array.from(document.querySelectorAll('h1'));
+console.log(arr1);
+
+// This method is a method that is attached to the array constructor
+// We cannot use Array.from on an array
+
+// This is because .from is attached to the constructor, and not the prototype property
+// of the constructor
+// Therefore all the arrays do not inherit this method
+
+//Array.froim here is just a simple function that is attached to the array constructor
+// The reason for this is so Developer know it's related to arrays
+// We can also say the from method is in the Array namespace
+
+// Therefore, from is static, and it is static on the array constructor.
+// We usually use these as "helpers" that should be related to a certain constructor
+
+PersonCl.hey();
+
+//Static methods are not available on instances, but are still useful to implmenet a helper function about a class or constructor function
+
+//OBJECT.CREATE
+
+// Object.Create there is still the idea of prototypal inheritance, howewver there are no prototypal properties involved
+// and also no constructor functions, no new operator
+
+// Instead  we can use Object.create to manually set the prototype of an object to any object we want
+
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+  // This looks like a constructor function but it's not
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+steven.name = 'Steven';
+steven.birthYear = 2002;
+console.log(steven);
+
+steven.calcAge();
+// Object.create is the least used way to implement prototypal inheritance, but it is still used.
+
+console.log(steven.__proto__ === PersonProto);
+
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1978);
+sarah.calcAge();
+
+/////////////////////////////////
+// Coding Challenge #2
+/////////////////////////////////
+// Your tasks:
+// 1. Re-create Challenge #1, but this time using an ES6 class (call it 'CarCl')
+
+// § Data car 1: 'Ford' going at 120 km/h
+// 2. Add a getter called 'speedUS' which returns the current speed in mi/h (divide
+// by 1.6)
+
+// 3. Add a setter called 'speedUS' which sets the current speed in mi/h (but
+// converts it to km/h before storing the value, by multiplying the input by 1.6)
+// 4. Create a new car and experiment with the 'accelerate' and 'brake'
+// methods, and with the getter and setter.
