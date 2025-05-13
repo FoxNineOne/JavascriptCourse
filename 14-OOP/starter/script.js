@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; /*
 
 /*
 What is Object Oriented Programming?
@@ -119,7 +119,7 @@ The 4 pillars of OOP are still valid and important here
 
 //Constructor functions always start with a capital letter..
 // Arrow functions do not work as consturctor functions.. as there is no this keyword.
-
+/*
 const Person = function (firstName, birthYear) {
   // Instance properties - will be available on all instances created with this constructor function
   this.firstName = firstName;
@@ -168,7 +168,7 @@ Person.hey(); // Returns
 Person.prototype.calcAge = function () {
   console.log(2037 - this.birthYear);
 };
-
+*/
 // This isn't on the jiji object, but prototypal inheritance means we can call it!
 // jiji.calcAge();
 
@@ -184,7 +184,7 @@ Person.prototype.calcAge = function () {
 // but the prototype that will be used to objects created with the Person constructor function.
 
 // we can also set properties on the prototype, which instances will inherit.
-Person.prototype.species = 'Homo Sapiens';
+// Person.prototype.species = 'Homo Sapiens';
 // console.log(jiji);
 // console.log(matilda);
 
@@ -344,7 +344,7 @@ the new speed to the console */
 § Data car 2: 'Mercedes' going at 95 km/h
 
 */
-
+/*
 // dataCar1.accelerate();
 // dataCar2.brake();
 
@@ -403,14 +403,14 @@ const jessica = new PersonCl('Jessica Burger', 1996);
 console.log(jessica);
 console.log(jessica.__proto__ === PersonCl.prototype); // This acts like any other function constructor
 jessica.calcAge();
-/*
+
 PersonCl.prototype.greet = function () {
   console.log(`Hey ${this.firstName}!`);
 };
-*/
-jessica.greet();
 
-const walter = new PersonCl('Walter White', 1965);
+// jessica.greet();
+
+// const walter = new PersonCl('Walter White', 1965);
 
 // 1) Classess are NOT hoisted, even if they're class declarations
 // Functions are hoisted, wew can use them before they're declared in the code
@@ -490,7 +490,7 @@ PersonCl.hey();
 // and also no constructor functions, no new operator
 
 // Instead  we can use Object.create to manually set the prototype of an object to any object we want
-
+/*
 const PersonProto = {
   calcAge() {
     console.log(2037 - this.birthYear);
@@ -515,18 +515,140 @@ console.log(steven.__proto__ === PersonProto);
 const sarah = Object.create(PersonProto);
 sarah.init('Sarah', 1978);
 sarah.calcAge();
-
+*/
 /////////////////////////////////
 // Coding Challenge #2
 /////////////////////////////////
 // Your tasks:
 // 1. Re-create Challenge #1, but this time using an ES6 class (call it 'CarCl')
 
-// § Data car 1: 'Ford' going at 120 km/h
-// 2. Add a getter called 'speedUS' which returns the current speed in mi/h (divide
-// by 1.6)
+/* 1. Use a constructor function to implement a 'Car'. A car has a 'make' and a
+'speed' property. The 'speed' property is the current speed of the car in
+km/h  */
+/*
+// Class Declaration
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+  accelerate = function () {
+    this.speed += 10;
+    console.log(
+      `Acceleration applied on ${this.make}. New speed is ${this.speed} km/h`
+    );
+  };
 
-// 3. Add a setter called 'speedUS' which sets the current speed in mi/h (but
-// converts it to km/h before storing the value, by multiplying the input by 1.6)
+  brake = function () {
+    this.speed -= 5;
+    console.log(
+      `Brakes applied on ${this.make}. New speed is ${this.speed} km/h`
+    );
+  };
+  // 2. Add a getter called 'speedUS' which returns the current speed in mi/h (divide
+  // by 1.6)
+
+  get speedUS() {
+    return this.speed / 1.6;
+  }
+
+  // 3. Add a setter called 'speedUS' which sets the current speed in mi/h (but
+  // converts it to km/h before storing the value, by multiplying the input by 1.6)
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+}
+
+const ford = new CarCl('Ford', 120);
+console.log(ford.speedUS);
+ford.accelerate();
+ford.brake();
+ford.accelerate();
+console.log(ford);
+ford.speedUS = 50;
+console.log(ford);
+// § Data car 1: 'Ford' going at 120 km/h
+
 // 4. Create a new car and experiment with the 'accelerate' and 'brake'
 // methods, and with the getter and setter.
+
+const civic = new CarCl('Civic', 160);
+civic.accelerate();
+civic.accelerate();
+civic.brake();
+console.log(civic.speedUS);
+civic.speedUS = 200;
+console.log(civic.speedUS);
+console.log(civic);
+
+*/
+
+// Inheritance between classes
+/*
+// Creating a new class Student, that will inherit properties from Person
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); //this essentially copies the prototype properties of Person, "inheriting" them
+  this.course = course;
+};
+
+// This has to come BEFORE any methods added /updated as it will wipe them if declared after
+Student.prototype = Object.create(Person.prototype);
+//We use object.create because we want to create a prototype object and inherit from Person,
+// not directly link to Person.Protrtype which "Student.prototype = Person.prototype;"
+// would achieve.
+
+Student.prototype.constructor = Student;
+//This will rename the constructor back to Student, otherwise the Prototype constructore will report back as "Person"
+
+//
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+const mike = new Student('Mike', 2020, 'Computer Science');
+console.log(mike);
+
+mike.introduce();
+mike.calcAge();
+
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+console.dir(Student.prototype.constructor);
+
+console.log(mike instanceof Student); //Returns true
+console.log(mike instanceof Person); // Returns true as Person > Student > mike
+
+
+*/
+
+/*************************************** */
+// ©⭕Dℹ️NG CH🅰️LLENGE 3️⃣!
+/*************************************** */
+
+// Test data:
+// § Data car 1: 'Tesla' going at 120 km/h, with a charge of 23%
+
+// Your tasks:
+// 1. Use a constructor function to implement an Electric Car (called 'EV') as a child
+// "class" of 'Car'. Besides a make and current speed, the 'EV' also has the
+// current battery charge in % ('charge' property)
+
+// 2. Implement a 'chargeBattery' method which takes an argument
+// 'chargeTo' and sets the battery charge to 'chargeTo'
+
+// 3. Implement an 'accelerate' method that will increase the car's speed by 20,
+// and decrease the charge by 1%. Then log a message like this: 'Tesla going at 140
+// km/h, with a charge of 22%'
+
+// 4. Create an electric car object and experiment with calling 'accelerate',
+// 'brake' and 'chargeBattery' (charge to 90%). Notice what happens when
+// you 'accelerate'! Hint: Review the definiton of polymorphism �
