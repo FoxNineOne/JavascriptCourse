@@ -276,7 +276,7 @@ Array.prototype.unique = function () {
 };
 
 // All arrays inherit this
-console.log(arr.unique());
+//console.log(arr.unique());
 
 // This isn't good practise but we can do it.. just not good practise
 
@@ -344,7 +344,6 @@ the new speed to the console */
 § Data car 2: 'Mercedes' going at 95 km/h
 
 */
-/*
 // dataCar1.accelerate();
 // dataCar2.brake();
 
@@ -399,10 +398,10 @@ class PersonCl {
   }
 }
 
-const jessica = new PersonCl('Jessica Burger', 1996);
-console.log(jessica);
-console.log(jessica.__proto__ === PersonCl.prototype); // This acts like any other function constructor
-jessica.calcAge();
+// const jessica = new PersonCl('Jessica Burger', 1996);
+// console.log(jessica);
+// console.log(jessica.__proto__ === PersonCl.prototype); // This acts like any other function constructor
+// jessica.calcAge();
 
 PersonCl.prototype.greet = function () {
   console.log(`Hey ${this.firstName}!`);
@@ -430,7 +429,7 @@ PersonCl.prototype.greet = function () {
 // Constructors can become detached and a little less easier to read.
 
 // GETTER AND SETTERS
-
+/*
 // Every object in js can have "getter" or "setter" properties,
 // we call these special properties "assessor properties" whilst the other properties are called "data properties"
 
@@ -631,24 +630,176 @@ console.log(mike instanceof Person); // Returns true as Person > Student > mike
 */
 
 /*************************************** */
-// ©⭕Dℹ️NG CH🅰️LLENGE 3️⃣!
+// CODING CHALLENGE 3!
 /*************************************** */
-
-// Test data:
-// § Data car 1: 'Tesla' going at 120 km/h, with a charge of 23%
-
+/*
 // Your tasks:
+
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(
+    `Acceleration applied on ${this.make}. New speed is ${this.speed} km/h`
+  );
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(
+    `Brakes applied on ${this.make}. New speed is ${this.speed} km/h`
+  );
+};
+
 // 1. Use a constructor function to implement an Electric Car (called 'EV') as a child
 // "class" of 'Car'. Besides a make and current speed, the 'EV' also has the
 // current battery charge in % ('charge' property)
 
+const EV = function (make, speed, charge) {
+  this.charge = charge;
+  Car.call(this, make, speed);
+  {
+    this.make = make;
+    this.speed = speed;
+  }
+};
+
+//Manually link prototype chain
+EV.prototype = Object.create(Car.prototype);
+EV.prototype.constructor = EV;
+
 // 2. Implement a 'chargeBattery' method which takes an argument
 // 'chargeTo' and sets the battery charge to 'chargeTo'
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+  console.log(`${this.make}'s battery has been charged to ${this.charge}%.`);
+};
 
 // 3. Implement an 'accelerate' method that will increase the car's speed by 20,
 // and decrease the charge by 1%. Then log a message like this: 'Tesla going at 140
 // km/h, with a charge of 22%'
+EV.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge--;
+  console.log(
+    `Acceleration applied on ${this.make}. New speed is ${this.speed} km/h with a charge of ${this.charge}%`
+  );
+};
 
 // 4. Create an electric car object and experiment with calling 'accelerate',
 // 'brake' and 'chargeBattery' (charge to 90%). Notice what happens when
 // you 'accelerate'! Hint: Review the definiton of polymorphism �
+
+// Test data:
+// § Data car 1: 'Tesla' going at 120 km/h, with a charge of 23%
+const tesla = new EV('Tesla', 120, 23);
+console.log(tesla);
+tesla.accelerate();
+tesla.chargeBattery(90);
+console.log(tesla);
+tesla.brake();
+
+*/
+/*
+//INHERITANCE BETWEWEN ES6 CLASSES
+
+//using extends will link prototype chain behind the scenes
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    //With Class, we dont call, we use Super
+    // Needs to happen first
+    super(fullName, birthYear);
+
+    this.course = course;
+  }
+  introduce() {
+    console.log(`My name is ${this.fullName} and I study ${this.course}`);
+  }
+
+  //Override parent method
+  calcAge() {
+    console.log(
+      `I'm ${
+        2037 - this.birthYear
+      } years old, but as a student I feel more like ${2047 - this.birthYear}!`
+    );
+  }
+}
+
+const martha = new StudentCl('Martha Jones', 2012, 'Computer Science');
+martha.introduce();
+martha.calcAge();
+*/
+//INHERITANCE BETWEEN "CLASSES" and Object.create
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+  // This looks like a constructor function but it's not
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+// StudentPrototype has a parent Prototype of Person
+const StudentProto = Object.create(PersonProto);
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`My name is ${this.firstName} and I study ${this.course}`);
+};
+
+// jay has Student Prototype
+// Person > Student > jay chain established
+const jay = Object.create(StudentProto);
+jay.init('Jay', 2010, 'Computer Science');
+jay.introduce();
+jay.calcAge();
+
+// ANOTHER CLASS EXAMPLE
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locale = navigator.language;
+    console.log(`Thank you for opening an account, ${owner} 😸`);
+  }
+  //Public interface
+  deposit(val) {
+    this.movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+  }
+
+  approveLoan(val) {
+    return true;
+  }
+  requestLoan(val) {
+    if (this.approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Loan approved. Please check your balance.`);
+    }
+  }
+}
+
+const acc1 = new Account('Shaheen', 'GBP', 1111);
+console.log(acc1);
+
+acc1.deposit(250);
+acc1.withdraw(100);
+acc1.requestLoan(1000);
+console.log(acc1.approveLoan());
+
+// ENCAPSULATION - PRIVATE CLASS FIELDS AND METHODS
