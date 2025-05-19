@@ -356,56 +356,56 @@ the new speed to the console */
 // Class Expression
 // const PersonCl = class{}
 
-// Class Declaration
-class PersonCl {
-  constructor(fullName, birthYear) {
-    this.fullName = fullName;
-    this.birthYear = birthYear;
-  }
-  //writing methods inside the class, but outside the constructor
-  // will be on prototype of the object - not on the object iself.
-  // Prototypal inheritance!
+// // Class Declaration
+// class PersonCl {
+//   constructor(fullName, birthYear) {
+//     this.fullName = fullName;
+//     this.birthYear = birthYear;
+//   }
+//   //writing methods inside the class, but outside the constructor
+//   // will be on prototype of the object - not on the object iself.
+//   // Prototypal inheritance!
 
-  // Instance Methods
-  calcAge() {
-    console.log(2037 - this.birthYear);
-  }
-  //Commas are not used between method declarations
-  greet() {
-    console.log(`Hey ${this.fullName}!`);
-  }
+//   // Instance Methods
+//   calcAge() {
+//     console.log(2037 - this.birthYear);
+//   }
+//   //Commas are not used between method declarations
+//   greet() {
+//     console.log(`Hey ${this.fullName}!`);
+//   }
 
-  get age() {
-    return 2037 - this.birthYear;
-  }
+//   get age() {
+//     return 2037 - this.birthYear;
+//   }
 
-  //Setting a property that already exists
-  // Data validation - check if full name is supplied by looking for a space
-  set fullName(name) {
-    if (name.includes(' ')) this._fullName = name;
-    // The underscore is to stop the max stack loop error.
-    else alert(`${name} is not a full name!`);
-  }
-  // as we had create a new variable, the below will return the fullname variable with updated value.
-  get fullName() {
-    return this._fullName;
-  }
+//   //Setting a property that already exists
+//   // Data validation - check if full name is supplied by looking for a space
+//   set fullName(name) {
+//     if (name.includes(' ')) this._fullName = name;
+//     // The underscore is to stop the max stack loop error.
+//     else alert(`${name} is not a full name!`);
+//   }
+//   // as we had create a new variable, the below will return the fullname variable with updated value.
+//   get fullName() {
+//     return this._fullName;
+//   }
 
-  // Static Methods
-  static hey() {
-    console.log(`Well, hello there 👋🏽`);
-    console.log(this);
-  }
-}
+//   // Static Methods
+//   static hey() {
+//     console.log(`Well, hello there 👋🏽`);
+//     console.log(this);
+//   }
+// }
 
 // const jessica = new PersonCl('Jessica Burger', 1996);
 // console.log(jessica);
 // console.log(jessica.__proto__ === PersonCl.prototype); // This acts like any other function constructor
 // jessica.calcAge();
 
-PersonCl.prototype.greet = function () {
-  console.log(`Hey ${this.firstName}!`);
-};
+// PersonCl.prototype.greet = function () {
+//   console.log(`Hey ${this.firstName}!`);
+// };
 
 // jessica.greet();
 
@@ -734,6 +734,7 @@ martha.introduce();
 martha.calcAge();
 */
 //INHERITANCE BETWEEN "CLASSES" and Object.create
+/*
 const PersonProto = {
   calcAge() {
     console.log(2037 - this.birthYear);
@@ -763,43 +764,158 @@ const jay = Object.create(StudentProto);
 jay.init('Jay', 2010, 'Computer Science');
 jay.introduce();
 jay.calcAge();
+*/
+// ENCAPSULATION - PRIVATE CLASS FIELDS AND METHODS
+// ES 2022!
 
-// ANOTHER CLASS EXAMPLE
-class Account {
-  constructor(owner, currency, pin) {
-    this.owner = owner;
-    this.currency = currency;
-    this.pin = pin;
-    this.movements = [];
-    this.locale = navigator.language;
-    console.log(`Thank you for opening an account, ${owner} 😸`);
+// Private fields are the only way to hide fields, we can't do similar with constructor functions
+
+// 1) Public Fields
+// 2) Prviate Fields
+// 3) Public methods
+// 4) Private methods
+// Static version of the above 4
+// Static fields and methods are not accessible on the instance, they are not inherited.
+// Only accessible on the class itself.
+
+//Public interface (API) Public methods
+
+// getMovements() {
+//   return this.#movements; // NOT CHAINABLE - unless at end of chain as it's returning movements
+// }
+
+// deposit(val) {
+//   this.#movements.push(val);
+//   return this;
+// }
+
+// withdraw(val) {
+//   this.deposit(-val);
+//   return this;
+// }
+
+// //Private method time! Add a #!
+// #approveLoan(val) {
+//   // Fake method
+//   return true;
+// }
+// requestLoan(val) {
+//   if (this.#approveLoan(val)) {
+//     this.deposit(val);
+//     console.log(`Loan approved. Please check your balance.`);
+//   }
+//   return this;
+// }
+// // Not inherited
+// static test() {
+//   console.log('TEST');
+// }
+
+// const acc1 = new Account('Shaheen', 'GBP', 1111);
+// console.log(acc1);
+// acc1.deposit(250);
+// acc1.withdraw(100);
+
+// acc1.movements = []; //This will no longer reset the movements.. it will create a new property
+// console.log(acc1);
+// acc1.requestLoan(1000);
+
+// console.log(acc1.#movements); can no longer access it!
+
+// CHAINING METHODS
+
+// const movements = acc1;
+
+// acc1
+//   .deposit(250)
+//   .withdraw(100)
+//   .withdraw(5)
+//   .requestLoan(25000)
+//   .withdraw(4000)
+//   .getMovements();
+
+// to do  this, we need to return the object itself at the end of  each method we want to be chainable
+// These methods need to be called on an instance of the class
+// For them to work via chaining, they need to "return this" to then allow the object to update,
+// and the  next in the chain to access it
+// console.log(movements);
+
+/* *******************************
+CODING CHALLENGE 4!
+******************************* */
+
+// Class Declaration
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
   }
-  //Public interface
-  deposit(val) {
-    this.movements.push(val);
+  accelerate() {
+    this.speed += 10;
+    console.log(
+      `Acceleration applied on ${this.make}. New speed is ${this.speed} km/h`
+    );
+    return this;
   }
 
-  withdraw(val) {
-    this.deposit(-val);
+  brake() {
+    this.speed -= 5;
+    console.log(
+      `Brakes applied on ${this.make}. New speed is ${this.speed} km/h`
+    );
+    return this;
   }
 
-  approveLoan(val) {
-    return true;
+  // 2. Add a getter called 'speedUS' which returns the current speed in mi/h (divide
+  // by 1.6)
+
+  get speedUS() {
+    return this.speed / 1.6;
   }
-  requestLoan(val) {
-    if (this.approveLoan(val)) {
-      this.deposit(val);
-      console.log(`Loan approved. Please check your balance.`);
-    }
+
+  // 3. Add a setter called 'speedUS' which sets the current speed in mi/h (but
+  // converts it to km/h before storing the value, by multiplying the input by 1.6)
+  set speedUS(speed) {
+    this.speed = speed * 1.6;
   }
 }
 
-const acc1 = new Account('Shaheen', 'GBP', 1111);
-console.log(acc1);
+// 1. Re-create Challenge #3, but this time using ES6 classes: create an 'EVCl'
+// child class of the 'CarCl' class
 
-acc1.deposit(250);
-acc1.withdraw(100);
-acc1.requestLoan(1000);
-console.log(acc1.approveLoan());
+class EVCl extends CarCl {
+  // 2. Make the 'charge' property private
+  #charge;
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    console.log(`${this.make}'s battery has been charged to ${this.#charge}%.`);
+    return this;
+  }
 
-// ENCAPSULATION - PRIVATE CLASS FIELDS AND METHODS
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(
+      `${this.make} is now going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+}
+
+const jiji = new EVCl('Honda Civic', 180, 90);
+console.log(jiji);
+// 3. Implement the ability to chain the 'accelerate' and 'chargeBattery'
+// methods of this class, and also update the 'brake' method in the 'CarCl'
+// class. Then experiment with chaining!
+jiji.chargeBattery(100).accelerate().chargeBattery(24).brake();
+
+// Test data:
+// § Data car 1: 'Rivian' going at 120 km/h, with a charge of 23%
+const rivian = new EVCl('Rivian', 120, 23);
+rivian.chargeBattery(56).accelerate().chargeBattery(105).brake().accelerate();
