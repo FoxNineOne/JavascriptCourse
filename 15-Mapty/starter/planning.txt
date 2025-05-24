@@ -1,0 +1,73 @@
+You should always plan your app first. 
+So far, I sometimes do this.
+
+
+// 1. User Stories
+
+A user story is a description of an applications functionality from the user's persepctive
+All user stories put together will descible the entire application.
+        \/
+
+// 2. Features
+
+        \/
+
+//3. Flow Charts - shows WHAT we will build
+
+
+        \/
+
+// 4. Architecture - HOW we will organise our code, what js features to use.
+Gives us a structure in how we'll build functionality.
+
+        \/
+
+// DEVELOPMENT STEP - Implementation of our plan using code.
+
+
+
+
+
+
+User Stories
+1) "Log my running workouts with location,distance,time,pace and steps/minute(cadence)"
+2) "Log my cycling workouts with location, distince,time,speed and elevation gain"
+
+        \/
+
+
+Class: Workout
+        id
+        ,distance      // both child classes need these three so makes sense to have on parent and inherit down
+        ,duration
+        ,coords
+        ,date
+
+        constructor()
+
+Child Class: Running
+        name
+        ,cadence
+        ,pace
+
+        constructor()
+
+Child Class: cycling
+        name
+        ,elevationGain
+        ,speed
+
+        ,constructor()
+
+
+
+
+Class app
+        workouts
+        ,map
+        ,constructor()
+        ,_getPosition() //_ convention we can use to prevent method names being accessed/changed from external sources
+        ,_loadMap(position)
+        ,_showForm()
+        ,_toggleElevationField()
+        ,_newWorkout() // Leads to newRunning*() or newCycling()
