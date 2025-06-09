@@ -1,0 +1,114 @@
+// ASYNCHRONOUS CODE
+Asynchronous code is executed after a task that runs in the "background" finishes
+Asynchronous code in non-blocking - code continues execution.
+
+Execution doesn't wait for an asynchronous task to finish.
+
+asynchronous means "not occuring at the same time"
+
+Callback functions alone do not make code asynchronous
+Neither do event listeners alone
+
+setting source attribute is asynchronous"img.src='cat.jpg';"
+
+// AJAX 
+AJAX are probably the most important use case of asynchronous javascrip
+Ajax stands fpr 
+Asynchronous Javascript And XML
+Allows us to commmunicate with remote web servers in an asynchronous way.
+With AJAX calls, we can request data from web servers dynamically.
+
+// API
+Application Programming Interface
+Piece of software that can be used by another piece of software, in 
+order to allow applications to talk to each other.
+
+There are many types of API in web development
+such as: DOM API, Geolocation API, Own Class API , "Online" API
+
+An "online" API is an applciation running on a server, 
+that receives requests for data and sends data back as response.
+
+
+// CORS
+Cross Origin Resource Sharing, without CORS we cannot access a 3rd party API from our code.
+
+JSON is the most popular data format for APIs
+
+// Request Resposne Model / Client Server Architecture
+The browser (client) sends requests to server. 
+The response from server to client will be returned data
+
+
+URLs we type into browsers on sites aren't specifically where the web server is hosting the page.
+But these are like "aliases", which are go through "DNS Lookup" to find the actual IP address and port
+Domain is not real address, DNS Lookup will convert to real address
+
+
+Once the IP address is established a TCP/IP socket connection is established between browser and server
+this is kepty alive for entire time to retrieve all data/website.
+
+
+HTTP Response is returned when web server has returning data/repsonse ready
+Returns with status code (200 is okay)
+
+Index.html is first to be loaded, then assets (Js, css, images) Process is repeated for each file
+When all files are downloaded, the page can then be rendered
+
+
+// HTTP 
+Http hyper text transfer protocol
+Another communication protocol  (a system of rules that allows two or more parties to communicate) 
+HTTPS is HTTPS encrypted with TLS or SSL (more protocols)
+
+// TCP/IP
+TCP/IP are like internets fundamental control system
+decide on how data moves on the internet.
+
+Job is to break requests and responses into thousands of tiny packets.
+These are split and sent to destination in several routes, to ensure a quicker transfer time compared to one giant packet.
+
+These are all sent to server then rebuilt. 
+
+
+
+// PROMISE (ES6)
+A promise is an object that is used as a placehold for a future result of an aynschronous operation
+
+A container for an asynchronously delivered value
+A container for a future value
+
+Example: response from an AJAX Call
+Like a lottery ticket : a promise I will receive money in future if I guess the correct numbers.
+Lottery draw happens asynchronously
+If correct outcome, I receive promised money
+
+We no longer need to rely on events and callbacks passed into asynchrononous
+results
+
+Instead of nesting callbacks (callback hell) we can chain promises for a sequence
+of asynchronous operations: escaping callback hell
+
+Promises are time sensitive, change over time
+Promises can be in different states
+
+Lifecycle of a promise
+
+In beginning, it is pending
+When task finishes, the promise is "settled"
+
+Two types of settled: Fulfilled, or rejected
+Fulfilled is success, the value is available as expected
+Rejected is failure, error has happened (auth, user is offline, etc.)
+
+We are able to handle these different states in our code.
+
+Promises are only settled once, and from there, the state will remain unchanged forever.
+
+//CONSUME PROMISE 
+When we fetch, the fetch API returns/builds Promise
+We then "consume" this promise when it is returned
+
+
+
+//Handling an error is also called "catching an error"
