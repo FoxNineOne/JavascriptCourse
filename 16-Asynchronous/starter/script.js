@@ -256,3 +256,81 @@ btn.addEventListener('click', function () {
 // catch is called when promise s rejected
 // finally is always called
 // not always useful but has its uses
+
+// THE EVENT LOOP
+
+// JS Runtime - a container which includes all the pieces necessary to execute JS code
+// JS Engine - the Heart of the runtime. Where code is executed (code stack), and where objects are stored in memory (heap)
+// js has only one thread of execution, no multitasking happens in js
+
+// Web API - APIs provided to engine, but are not part of js language itself
+// like the DOM , timers, fetch API, geolocation API etc.
+
+// Callback queue - ready-to-be-executed callback functions (coming from events)
+
+// EVENT LOOP -  Whenever callstack is empty, the event loop takes callbacks from the callback queue
+// and puts them in the callstack so they can be executed. Event loop is essential piece that makes
+// asynchronous javascript possible
+
+// It's the reason we have a non blocking concurrency model in javascript
+// (the code doesn't stop waiting for previous execution to complete)
+
+// A Javascript engine is built around a single thread,
+
+// everything related to DOM is not part of javascript, but the web APIs
+// In the web APIs env is where the asynchronous tasks related to the DOM will run
+// This includes AJAX calls,  loading images, timers etc.
+
+// When the task has completed/loaded/responded, it is then placed in the callback queue
+// This is an ordered list of callback functions in order to be executed
+// Because of this queue , it does mean a timer callback can take longer than the time yo uset
+// to callback, as there may be a queue of callbacks ahead of it to process
+// if you set a 5 second timer, and there's 1 second of execution in the queue prior,
+// then your timer is actually 6 seconds.
+
+// The callback queue also contains callbacks coming from DOM events, such as clicks, key presses, hovering etc.
+// DOM events are not asynchronous behaviour, but they use the callback queue to run their callbacks
+
+//  EVENT LOOP
+// Event loop looks into callstack and sees if it's empty or not.
+// If Call stack is empty, then the first callback in Callback Queue is placed
+// in call stack to be executed. This is an event loop tick (each time event loop takes a callback from queue to stack)
+//
+
+// Javascipt language itself has no sense of time.
+// Everything that is asynchronous does not happen in engine, the runtime manages asynchronous behaviour
+
+// The engine simply executes any code that it is given
+
+//How does fetch come into all of this?
+// Promises
+
+// Promises are slightly different.
+// callbacks related to promises do not go into callback queue
+// instead callbacks of promises have their own queue (micotasks queue)
+
+// Microtasks queue has priority over callbackqueue
+// All microtasks queue has to be emptied before callbacks are considered for event loop
+
+//Which order will the below run in?
+// First - top level and first in script
+/*
+console.log(`Test Start`);
+// Fourth - Callback queue
+setTimeout(() => console.log(`0 second timer`), 0);
+// Third - MicoTasks Queue
+Promise.resolve('Resolved Promise 1').then(res => console.log(res)); // create a promise that is immediately resolved
+// Second - Top level
+console.log(`Test End`);
+*/
+console.log(`Test Start`);
+// Fifth and Last - Callback queue (the microtask queue pushes it back)
+setTimeout(() => console.log(`0 second timer`), 0);
+// Third - MicoTasks Queue
+Promise.resolve('Resolved Promise 1').then(res => console.log(res)); // create a promise that is immediately resolved
+// Fourth
+Promise.resolve('Resolved Promise 2').then(res => {
+  for (let i = 0; i < 1000000000; i++) {}
+  console.log(res);
+});
+console.log(`Test End`);

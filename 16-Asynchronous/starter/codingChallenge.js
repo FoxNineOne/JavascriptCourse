@@ -12,69 +12,16 @@
 ////////////////////////////////
 // PART 1
 ////////////////////////////////
+//Render country from lexture script
 
 //I'm gonna make this a top level URL because it looks like these APIs change often
 const url_WhereAmI = `https://api.bigdatacloud.net/data/reverse-geocode-client`;
 
 // https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=52.508&longitude=13.381
+
 // 1. Create a function 'whereAmI' which takes as inputs a latitude value ('lat')
 // and a longitude value ('lng') (these are GPS coordinates, examples are in test
 // data below).
-
-const whereAmI = function (lat, lng) {
-  //fetch stuff!
-  retData = {};
-
-  fetch(url_WhereAmI + `?latitude=${lat}&longitude=${lng}`)
-    .then(response => {
-      if (!response.ok) throw new Error(`No reponse`);
-      return response.json();
-    })
-    .then(data => {
-      retData = data;
-      //   console.log(data);
-      console.log(`You are in ${retData.city}, ${retData.countryName}`);
-    })
-    .catch(err => console.log(`${err}`));
-};
-
-whereAmI(52.508, 13.381);
-whereAmI(5, 2);
-
-/*
-
-
-const getCountryData = function (country) {
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(
-      response => {
-        if (!response.ok)
-          throw new Error(
-            `Country not found: ${country.toUpperCase()} (${response.status})`
-          ); // "throw"  will immediately terminate the current function, like return
-
-        return response.json();
-      }
-      // ,err => alert(err)
-    )
-    .then(data => {
-      renderCountry(data[0]);
-      console.log(data[0]);
-      // const neighbour = data[0].borders?.[0];
-      const neighbour = 'keith';
-      if (!neighbour) return;
-      return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
-    })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(
-          `Country not found: ${country.toUpperCase()} (${response.status})`
-        ); // "throw"  will immediately terminate the current function, like return
-
-      return response.json();
-    })
-
-*/
 
 // 2. Do “reverse geocoding” of the provided coordinates. Reverse geocoding means
 // to convert coordinates to a meaningful location, like a city and country name.
@@ -83,18 +30,59 @@ const getCountryData = function (country) {
 // https://geocode.xyz/52.508,13.381?geoit=json. Use the fetch API and
 // promises to get the data. Do not use the 'getJSON' function we created, that
 // is cheating �
+const whereAmI = function (lat, lng) {
+  //fetch stuff!
+  retData = {};
 
-// 3. Once you have the data, take a look at it in the console to see all the attributes
-// that you received about the provided location. Then, using this data, log a
-// message like this to the console: “You are in Berlin, Germany”
+  fetch(url_WhereAmI + `?latitude=${lat}&longitude=${lng}`)
+    .then(response => {
+      if (!response.ok) throw new Error(`No reponse ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      // 3. Once you have the data, take a look at it in the console to see all the attributes
+      // that you received about the provided location. Then, using this data, log a
+      // message like this to the console: “You are in Berlin, Germany”
+      console.log(`You are in ${data.city}, ${data.countryName}`);
+      return fetch(`https://restcountries.com/v2/alpha/${data.countryCode}`);
+    })
+    //Part 2 stuff
+    .then(response => {
+      if (!response.ok)
+        throw new Error(
+          `Country not found: ${country.toUpperCase()} (${response.status})`
+        ); // "throw"  will immediately terminate the current function, like return
 
-// 4. Chain a .catch method to the end of the promise chain and log errors to the
-// console
+      return response.json();
+    })
+    .then(data => renderCountry(data))
+
+    // 4. Chain a .catch method to the end of the promise chain and log errors to the
+    // console
+    .catch(err => {
+      console.error(`${err} ⚠️⚠️😱`);
+      renderError(`Something went wrong 😱 : 
+          \r\n
+          ${err.message}
+          \r\n
+          Try again later`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+whereAmI(52.508, 13.381);
+// whereAmI(52.98841, -1.489362);
+// whereAmI(37.682, 12.59);
+// whereAmI(7.682, 12.59);
 
 // 5. This API allows you to make only 3 requests per second. If you reload fast, you
 // will get this error with code 403. This is an error with the request. Remember,
 // fetch() does not reject the promise in this case. So create an error to reject
 // the promise yourself, with a meaningful error message
+// The new API doesn't seem to have the 3 second request limit..
+// so I can't recreate this bug to alleviate it
 
 ////////////////////////////////
 // PART 2
