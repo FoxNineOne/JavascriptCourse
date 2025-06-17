@@ -112,3 +112,7 @@ We then "consume" this promise when it is returned
 
 
 //Handling an error is also called "catching an error"
+
+
+.then will only run after resolve
+.catch will any errors are reject states prior 

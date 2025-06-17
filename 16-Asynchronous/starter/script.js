@@ -243,9 +243,9 @@ const getCountryData = function (country) {
 // a promise in which an error happened is a rejected promise
 // the only way in the fetch promise rejects , is when the user loses internet connection
 
-btn.addEventListener('click', function () {
-  getCountryData('Brazil');
-});
+// btn.addEventListener('click', function () {
+//   getCountryData('Brazil');
+// });
 
 // two ways to handle rejections
 // pass a second callback in then method
@@ -323,14 +323,119 @@ Promise.resolve('Resolved Promise 1').then(res => console.log(res)); // create a
 // Second - Top level
 console.log(`Test End`);
 */
-console.log(`Test Start`);
-// Fifth and Last - Callback queue (the microtask queue pushes it back)
-setTimeout(() => console.log(`0 second timer`), 0);
-// Third - MicoTasks Queue
-Promise.resolve('Resolved Promise 1').then(res => console.log(res)); // create a promise that is immediately resolved
-// Fourth
-Promise.resolve('Resolved Promise 2').then(res => {
-  for (let i = 0; i < 1000000000; i++) {}
-  console.log(res);
+// console.log(`Test Start`);
+// // Fifth and Last - Callback queue (the microtask queue pushes it back)
+// setTimeout(() => console.log(`0 second timer`), 0);
+// // Third - MicoTasks Queue
+// Promise.resolve('Resolved Promise 1').then(res => console.log(res)); // create a promise that is immediately resolved
+// // Fourth
+// Promise.resolve('Resolved Promise 2').then(res => {
+//   for (let i = 0; i < 1000000000; i++) {}
+//   console.log(res);
+// });
+// console.log(`Test End`);
+/*
+//Building our own promise
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery Draw is happening 🔮`);
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve(`You WIN 🤑`); //mark promise as fulfilled promise
+    } else {
+      reject(new Error(`You lost! 💔`));
+    }
+  }, 2000);
 });
-console.log(`Test End`);
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+// Usually on build promises to wrap old callback based functions into promises
+// This is a process we call promisifying
+// means to convert callback based  asynchropnous behaviour to promise based
+
+// Promisifying setTimeout
+const wait = seconds => {
+  return new Promise(resolve =>
+    //Rejection not needed cos impossible for timer to fail
+    setTimeout(resolve, seconds * 1000)
+  );
+};
+wait(2)
+  .then(() => {
+    console.log(`I waited for 2 seconds`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`I waited for 1 more second`);
+  });
+
+// This promise will resolve immediately
+Promise.resolve(' I HAVE RESOLVEN!').then(x => console.log(x));
+//This will reject immediately
+Promise.reject(' I HAVE NOT RESOLVEN!').catch(x => console.error(x));
+*/
+//Promisifying the Geolocation API
+// navigator.geolocation.getCurrentPosition(
+//   position => console.log(position),
+
+//   err => console.error(err)
+// );
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   err => reject(err)
+    // );
+
+    //This will do same as above
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+// This will log before above API call
+// console.log(`Meowth 😸`);
+
+// getPosition()
+//   .then(pos => console.log(pos))
+//   .catch(err => console.error(err));
+
+const whereAmI = function () {
+  getPosition().then(pos => {
+    const { latitude: lat, longitude: lng } = pos.coords;
+
+    return fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+    )
+      .then(response => {
+        if (!response.ok) throw new Error(`No reponse ${response.status}`);
+        return response.json();
+      })
+      .then(data => {
+        console.log(`You are in ${data.city}, ${data.countryName}`);
+        return fetch(`https://restcountries.com/v2/alpha/${data.countryCode}`);
+      })
+
+      .then(response => {
+        if (!response.ok)
+          throw new Error(
+            `Country not found: ${country.toUpperCase()} (${response.status})`
+          ); // "throw"  will immediately terminate the current function, like return
+
+        return response.json();
+      })
+      .then(data => renderCountry(data))
+      .catch(err => {
+        console.error(`${err} ⚠️⚠️😱`);
+        renderError(`Something went wrong 😱 : 
+          \r\n
+          ${err.message}
+          \r\n
+          Try again later`);
+      })
+      .finally(() => {
+        countriesContainer.style.opacity = 1;
+      });
+  });
+};
+
+btn.addEventListener('click', whereAmI);
