@@ -5,6 +5,7 @@ const countriesContainer = document.querySelector('.countries');
 
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.opacity = 1;
 };
 // NEW COUNTRIES API URL (use instead of the URL shown in videos):
 // https://restcountries.com/v2/name/portugal
@@ -78,7 +79,7 @@ const renderCountry = function (data, className = '') {
         </article>`;
 
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 const getCountryAndNeighbour = function (country) {
   // AJAX Call country 1 create request variable
@@ -381,6 +382,67 @@ Promise.reject(' I HAVE NOT RESOLVEN!').catch(x => console.error(x));
 //   err => console.error(err)
 // );
 
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     // navigator.geolocation.getCurrentPosition(
+//     //   position => resolve(position),
+//     //   err => reject(err)
+//     // );
+
+//     //This will do same as above
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
+// This will log before above API call
+// console.log(`Meowth 😸`);
+
+// getPosition()
+//   .then(pos => console.log(pos))
+//   .catch(err => console.error(err));
+
+// const whereAmI = function () {
+//   getPosition().then(pos => {
+//     const { latitude: lat, longitude: lng } = pos.coords;
+
+//     return fetch(
+//       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+//     )
+//       .then(response => {
+//         if (!response.ok) throw new Error(`No reponse ${response.status}`);
+//         return response.json();
+//       })
+//       .then(data => {
+//         console.log(`You are in ${data.city}, ${data.countryName}`);
+//         return fetch(`https://restcountries.com/v2/alpha/${data.countryCode}`);
+//       })
+
+//       .then(response => {
+//         if (!response.ok)
+//           throw new Error(
+//             `Country not found: ${country.toUpperCase()} (${response.status})`
+//           ); // "throw"  will immediately terminate the current function, like return
+
+//         return response.json();
+//       })
+//       .then(data => renderCountry(data))
+//       .catch(err => {
+//         console.error(`${err} ⚠️⚠️😱`);
+//         renderError(`Something went wrong 😱 :
+//           \r\n
+//           ${err.message}
+//           \r\n
+//           Try again later`);
+//       })
+//       .finally(() => {
+//         countriesContainer.style.opacity = 1;
+//       });
+//   });
+// };
+
+// btn.addEventListener('click', whereAmI);
+
+//ASYNC AWAIT!!
+
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
     // navigator.geolocation.getCurrentPosition(
@@ -392,50 +454,191 @@ const getPosition = function () {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
-// This will log before above API call
-// console.log(`Meowth 😸`);
+// Looks like a normal function, but it will actually "await" for promise to be fulfilled
+// Async requires a promise
+/*
+const whereAmI = async function () {
+  try {
+    //Geolocation
+    //fetch(`https://restcountries.com/v2/name/${country}`).then(res => console.log(res);)
+    const pos = await getPosition();
+    const { latitidue: lat, longitude: lng } = pos.coords;
 
-// getPosition()
-//   .then(pos => console.log(pos))
-//   .catch(err => console.error(err));
-
-const whereAmI = function () {
-  getPosition().then(pos => {
-    const { latitude: lat, longitude: lng } = pos.coords;
-
-    return fetch(
+    // Receverse GeoCoding
+    const resGeo = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
-    )
-      .then(response => {
-        if (!response.ok) throw new Error(`No reponse ${response.status}`);
-        return response.json();
-      })
-      .then(data => {
-        console.log(`You are in ${data.city}, ${data.countryName}`);
-        return fetch(`https://restcountries.com/v2/alpha/${data.countryCode}`);
-      })
+    );
+    if (!resGeo.ok) throw new Error(`Problem getting location data`);
+    const dataGeo = await resGeo.json();
 
-      .then(response => {
-        if (!response.ok)
-          throw new Error(
-            `Country not found: ${country.toUpperCase()} (${response.status})`
-          ); // "throw"  will immediately terminate the current function, like return
-
-        return response.json();
-      })
-      .then(data => renderCountry(data))
-      .catch(err => {
-        console.error(`${err} ⚠️⚠️😱`);
-        renderError(`Something went wrong 😱 : 
-          \r\n
-          ${err.message}
-          \r\n
-          Try again later`);
-      })
-      .finally(() => {
-        countriesContainer.style.opacity = 1;
-      });
-  });
+    //COUNTRY DATA
+    //Await will stop code execution until the promise is fulfilled
+    const res = await fetch(
+      `https://restcountries.com/v2/alpha/${dataGeo.countryCode}`
+    );
+    // Stopping execution in async function doesn't stop execution as it is async
+    // Not in the call stack
+    if (!res.ok) throw new Error(`Problem getting Country data`);
+    const data = await res.json();
+    renderCountry(data);
+    return `You are in ${dataGeo.city},in ${dataGeo.countryName}`;
+  } catch (err) {
+    console.error(err.message);
+    renderError(`Something went wrong 😱 ${err.message}`);
+    // Reject promise returned from async function
+    throw err;
+  }
 };
 
-btn.addEventListener('click', whereAmI);
+console.log(`1: Will get location`);
+// const city = whereAmI();
+// console.log(city);
+
+// whereAmI()
+//   .then(city => console.log('2: ' + city))
+//   .catch(err => console.error(err.message))
+//   .finally(() => console.log(`3: Finished geting location`));
+
+
+// async await is syntactic sugar over the then method
+// await can only be used in an aysnc function
+
+// Error handling - with Try and Catch!
+// try {
+//   let y = 1;
+//   const x = 2;
+//   y = 2;
+// } catch (err) {
+//   alert(err);
+// }
+
+//IIFE Immediately Invoked Function Expressions
+(async function () {
+  try {
+    const wAI = await whereAmI();
+    console.log('2: ' + wAI);
+  } catch (err) {
+    console.error(err.message);
+  }
+
+  console.log(`3: Finished geting location`);
+})();
+
+// IIFE Async is a great way to return
+// and how to receive handle data from an async function
+// Common to have async functions calling other async functions
+
+*/
+
+// // Parallel Promises
+// These  Promises will run in sequence
+// const get3Countries = async function (c1, c2, c3) {
+//   try {
+//     const [data1] = await getJSON(`https://restcountries.com/v2/name/${c1}`);
+//     const [data2] = await getJSON(`https://restcountries.com/v2/name/${c2}`);
+//     const [data3] = await getJSON(`https://restcountries.com/v2/name/${c3}`);
+
+//         console.log(data1.capital, data2.capital, data3.capital);
+//   } catch (err) {
+//     console.err(err);
+//   }
+// };
+
+// get3Countries('Jamaica', 'Japan', 'Brazil');
+
+// Parallel Promises
+// Promise.all will run all 3 promises simultaneously
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    const data = Promise.all([
+      getJSON(`https://restcountries.com/v2/name/${c1}`),
+      getJSON(`https://restcountries.com/v2/name/${c2}`),
+      getJSON(`https://restcountries.com/v2/name/${c3}`),
+    ]);
+
+    //  I did this before the video, but the map idea was tidier...
+    //   (await data).forEach((v, i) => {
+    //     console.log(`Country No ${i + 1}'s City is: ${v[0].capital}!`);
+    //   });
+    // } catch (err) {
+    //   console.error(err);
+    // }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+get3Countries('Jamaica', 'Japan', 'Brazil');
+
+//Promise.all short circuits when one promise rejects
+// So if one promise isn't fulfilled, the whole thing fails
+
+// Promise.all is a combinator function, as it combines promises
+// There are three more:
+
+//Race AllSettled and Any
+
+//Promise.Race
+
+// Promise is settled the moment a promise is settled
+// The first promise settled wins the race!
+
+// (async function () {
+//   const res = await Promise.race([
+//     getJSON(`https://restcountries.com/v2/name/zimbabwe`),
+//     getJSON(`https://restcountries.com/v2/name/germany`),
+//     getJSON(`https://restcountries.com/v2/name/italy`),
+//   ]);
+
+//   console.log(res[0]);
+// })();
+// A Promise.race can short circuit
+// A promise that gets rejected can also win the race
+
+// we can exploit this and make timeout function
+
+// const timeout = function (sec) {
+//   return new Promise((_, reject) => {
+//     setTimeout(function () {
+//       reject(new Error('Request Timeout'));
+//     }, sec * 1000);
+//   });
+// };
+
+// // If the other gets do not return in 1.7 seconds, timeout will occurr
+// Promise.race([
+//   getJSON(`https://restcountries.com/v2/name/poland`),
+//   getJSON(`https://restcountries.com/v2/name/tanzania`),
+//   // timeout(1.7),
+// ])
+//   .then(res => console.log(res[0]))
+//   .catch(err => console.error(err));
+
+// Promise.allsettled
+
+// Similar to promise.all,
+// Promise.all can short circuit if ONE promise rejects
+// but allSettled will not short circuit.
+
+// Promise.allSettled([
+//   Promise.resolve('Success'),
+//   Promise.reject('ERROR'),
+//   Promise.resolve('Another Banger!'),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err));
+// //Returns the rejection too!
+
+// // promise.any
+// // Promise.any ES2021
+// // takes in array of multiple promises and will return the first fullfilled promise and ignore rejected promise
+// // Similar to promise.race, but the difference is rejected promises are ignored
+// // so always fulfilled promise (unless every promise rejects)
+
+// Promise.any([
+//   Promise.resolve('Success'),
+//   Promise.reject('ERROR'),
+//   Promise.resolve('Another Banger!'),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err));
