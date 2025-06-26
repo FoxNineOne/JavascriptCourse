@@ -127,17 +127,17 @@ const wait = sec => {
   return new Promise(res => setTimeout(res, sec * 1000));
 };
 
-let img;
 const createImage = function (imgPath) {
   return new Promise((resolve, reject) => {
-    img = document.createElement('img');
+    let img = document.createElement('img');
     img.src = imgPath;
 
     //resolve
     img.addEventListener('load', function () {
       img.classList.remove('hidden'); // show
       document.body.append(img); // add to the DOM
-      img.classList.add('images');
+      document.querySelector('.images').append(img);
+      //img.classList.add('images');
       resolve(img);
     });
     //reject
@@ -223,7 +223,7 @@ const loadNPause = async function () {
   }
 };
 
-loadNPause();
+//loadNPause();
 // 2. Compare the two versions, think about the big differences, and see which one
 // you like more
 
@@ -237,6 +237,20 @@ loadNPause();
 // 1. Create an async function 'loadAll' that receives an array of image paths
 // 'imgArr'
 
+const loadAll = async function (imgArr) {
+  try {
+    const imgs = imgArr.map(async img => await createImage(img));
+
+    const imgsEl = await Promise.all(imgs);
+    console.log(imgsEl);
+
+    imgsEl.forEach(img => img.classList.add('parallel'));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+loadAll(['./img/img-1.jpg', './img/img-2.jpg', './img/img-3.jpg']);
 // 2. Use .map to loop over the array, to load all the images with the
 // 'createImage' function (call the resulting array 'imgs')
 

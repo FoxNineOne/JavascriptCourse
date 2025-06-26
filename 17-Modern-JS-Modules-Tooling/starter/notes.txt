@@ -1,0 +1,75 @@
+// MODULES
+Modules are resuable pieces of code 
+that encapsulates implementation details
+
+Is usually a standaloen file.
+Not always the case, but when we think of module, it;'s usually a file
+can have imports and exports
+
+
+Whatever we export from modules is called the public API
+This is just like classes, where we can expose a public API for other code to consume
+
+
+In the case of modules, this public API is actually 
+consumed by importing values into a module
+
+These other modules we import are then called "Dependancies" 
+of the importing module, because the module "depends" on them to function.
+The module cannot work without the importing code.
+
+
+Modules make ity easy to compose software, they are a bit lkike building blocks
+to build more complex applications, or loops and samples in audio work.
+
+Modules allow codes to split up and worked on by individual engineers.
+Isolating components is a huge advantage of using modules.
+
+Make it very easy to abstract or code - we can use modules to implement low level code
+Modules allow for a more organised code base.
+
+Modules allow us to reuse the same code in a project, or multiple projects.
+
+As of ES6 js has a native built-in module system
+Did have them before, but had to be implemented by engineer or use external libraries
+
+Modules are stored as one module per file.
+
+
+Diff between script and ES6 modules
+
+ES6 
+All top level variables are scoped to module 
+The only way an outside module can access a value that's inside of a module
+Is if the inside module exports that value.
+If we don't export, we cannot see the variable from outside.
+Always in strict mode
+Top-level this is always undefined
+We can import/export values between modules
+
+link in HTML with <script type ="module"></script>
+
+In scripts
+All top level variables are global
+Private variables are the solution to this problem (with modules)
+Non-strict mode by default
+Top-Level this points at the window object
+Importing/Exporting values is impossible
+link with <script></script>
+
+
+
+[
+import { rand } from '.math.js';
+import { showDice } from '.dom.js';
+]
+The above is importing a value called rand from teh math.js module
+And importing showDice from .dom.js module
+
+
+The whole process of importing modules happens before code in 
+the main module is actually executed
+
+Only after all imported modules have been downloaded and executed, 
+the main index.js module will be finally be executed
+
