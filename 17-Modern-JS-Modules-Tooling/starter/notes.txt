@@ -73,3 +73,21 @@ the main module is actually executed
 Only after all imported modules have been downloaded and executed, 
 the main index.js module will be finally be executed
 
+Modules are imported synchronously
+This is possible thanks to top-level(static) imports, 
+which make imports known before execution
+
+Once parsing has completed, downloading of modules begins (downloading is asynchronous)
+It is only the importing operation itself that is synchronous.
+
+When a module is downloaded, it is parse and linked to index.js module.
+And this connection is a life connect, epxorted values are not copied to imports. 
+The import is basically a reference to the export at value.
+
+So when the value changes in the exporting module, this is reflected in the importing module.
+This is unique to ES6 modules.
+
+Other module systems do not work like this, but js modules do!
+
+
+Code in imported modules is then executed, and the process completes.
