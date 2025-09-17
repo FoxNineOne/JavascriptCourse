@@ -50,3 +50,24 @@ add('apples', 4);
 console.log(cart);
 
 //imoprts ARE NOT copies of exports.. they are live connections
+// console.log('Start Fetch🐈');
+// const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+// const data = await res.json();
+// console.log(data);
+
+// console.log('Finish Fetch🐟😺');
+//Check video in last section, might be first video, useful, remind you things
+
+const getLastPost = async function () {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await res.json();
+  return { title: data.at(-1).title, text: data.at(-1).body };
+};
+// calling an async function will always return a promise, not the data itself
+const lastPost = getLastPost();
+console.log(lastPost);
+// Not very clean but works
+// lastPost.then(last => console.log(last));
+
+const lastPost2 = await getLastPost();
+console.log(lastPost2);

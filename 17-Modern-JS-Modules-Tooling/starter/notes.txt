@@ -2,8 +2,8 @@
 Modules are resuable pieces of code 
 that encapsulates implementation details
 
-Is usually a standaloen file.
-Not always the case, but when we think of module, it;'s usually a file
+Is usually a standalone file.
+Not always the case, but when we think of module, it's usually a file
 can have imports and exports
 
 
@@ -89,5 +89,12 @@ This is unique to ES6 modules.
 
 Other module systems do not work like this, but js modules do!
 
-
 Code in imported modules is then executed, and the process completes.
+
+In ES2022, we can now use await keyword outside of async functions, atleast in modules
+While very useful, this blocks the execution of the entire module now
+
+One more important implication of top level await, if one module imports a module that has top level await
+then the importing module will wait for the imported module to finish the blocking code.
+
+Await outside of any async function can block function in it's own module, and any script that imports it as a module.
