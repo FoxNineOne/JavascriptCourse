@@ -1,9 +1,8 @@
 // MODULES
-Modules are resuable pieces of code 
-that encapsulates implementation details
+Modules are resuable pieces of code that encapsulates implementation details
 
 Is usually a standalone file.
-Not always the case, but when we think of module, it's usually a file
+Not always the case, but when we think of modules, it's usually a file
 can have imports and exports
 
 
@@ -19,7 +18,7 @@ of the importing module, because the module "depends" on them to function.
 The module cannot work without the importing code.
 
 
-Modules make ity easy to compose software, they are a bit lkike building blocks
+Modules make it easy to compose software, they are a bit like building blocks
 to build more complex applications, or loops and samples in audio work.
 
 Modules allow codes to split up and worked on by individual engineers.
@@ -98,3 +97,7 @@ One more important implication of top level await, if one module imports a modul
 then the importing module will wait for the imported module to finish the blocking code.
 
 Await outside of any async function can block function in it's own module, and any script that imports it as a module.
+
+
+you can rebuild node_module folder with npm -i
+(this is yarn at work.. what are the similarities between the two?)
