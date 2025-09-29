@@ -101,3 +101,33 @@ Await outside of any async function can block function in it's own module, and a
 
 you can rebuild node_module folder with npm -i
 (this is yarn at work.. what are the similarities between the two?)
+
+
+Parcel is a bundler.
+It's another build tool on npm
+install as a dev Dependancies 
+This separates them from regular dependancies like mapty
+--save-dev
+
+In the current situation, Parcel's job is to bundle together script.js,shoppingCart.js and cloneDeep.js
+two options to use Parcel
+NPX
+app built into NPM
+"npx parcel starter/index.html"
+
+
+Parcel then starts a development server to preview code like using live server. 
+
+creates a dist folder, there is a js script (our blundled code) and a map file
+
+
+Parcel will rebuild with every saved change of code by default, so no need to manually push each time
+
+/*
+//Hot Module - This will allow stop reloading of the whole change when saving code changes
+if (module.hot){
+    module.hot.accept()
+}
+*/
+
+NPM Scripts

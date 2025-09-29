@@ -1,7 +1,7 @@
 //Importing module
 //import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
 // import * as ShoppingCart from './shoppingCart.js';
-/*console.log(`Importing Module`);
+console.log(`Importing Module`);
 
 //shoppingCart log will print to console BEFORE the line3 console.log
 //variables that are declared in a module are scoped to the module
@@ -69,13 +69,13 @@ console.log(lastPost);
 // Not very clean but works
 // lastPost.then(last => console.log(last));
 
-const lastPost2 = await getLastPost();
-console.log(lastPost2);
+//const lastPost2 = await getLastPost();
+//console.log(lastPost2);
 
-*/
 // MODULE PATTERNS
 // The main goal of a module pattern is to enacpsulate functionality to have private data
 // and return values which can become our public API
+
 /*
 // IIFE
 const ShoppingCart2 = (function () {
@@ -144,7 +144,8 @@ export.addToCart = function (product, quantity) {
 const { addToCard } = require('./shoppingCart.js')
 */
 
-import cloneDeep from '../node_modules/lodash-es/cloneDeep.js';
+// import cloneDeep from '../node_modules/lodash-es/cloneDeep.js';
+import cloneDeep from 'lodash-es';
 
 const state = {
   cart: [
@@ -161,3 +162,12 @@ console.log(stateClone);
 const stateDeepClone = cloneDeep(state);
 state.user.loggedIn = true;
 console.log(stateDeepClone);
+
+// Parcel - Hot Module Reloading -- whenever a module is changed, it will trigger a rebuild
+// However, instead of it trigger a WHOLE PAGE RELOAD , it will just inject the changes into the page.
+
+//Great for amending/updating code without losing state (getting logged out, losing code calc etc.)
+
+if (module.hot) {
+  module.hot.accept();
+}
