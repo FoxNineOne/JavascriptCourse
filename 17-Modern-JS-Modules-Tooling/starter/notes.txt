@@ -131,3 +131,56 @@ if (module.hot){
 */
 
 NPM Scripts
+another way of runniung local packages in command line
+allow us to automate repetitive tasks
+
+We can add this to package.json
+
+"scripts": {
+    "start": "parcel .\\starter\\index.html"
+  },
+
+  then run "npm run start" in terminal.
+
+  This will bundle via parcel
+
+
+  we can also install packages globally with the G argument
+  npm i parcel -g
+
+  difference between globally and locally is that we can use global tools directly in command line without intermediate npm script
+
+
+  // Babel 
+  Babel is a js compiler we can use to ensure internet users on older tech
+  Old browsers can access our site, without the code being "too modern"
+
+Converts modern code into classic alternatives
+
+Babel can only transpile ES6 syntax, like arrow functions, classes, const or spread operator
+Things that have an equivalent way of writing in ES5
+
+i.e const > var
+
+This is not true for newer methods like find and Promise. 
+New additions to the language are simply not transpiled
+Syntax is easy to compile
+
+For the new methods, we can polyfill these 
+
+// Polyfilling
+
+Babel used to polyfill, but now they recommend 3rd parties. 
+
+import 'core-js/stable'
+
+Promise and find are not changed in script.
+What polyfilling does is to recreate defined functions and make them avilable in the bundle so the code can use it.
+
+We can cherry pick what is polyfilled and omit what we don't want to to reduce bundle size
+import 'core-js/stable/find' --Just the find method
+import 'core-js/stable/promise' etc..
+
+One feature that isn't covered by polyfill - async functions
+npm install regenerator-runtime
+import 'regenerator-runtime/runtime';

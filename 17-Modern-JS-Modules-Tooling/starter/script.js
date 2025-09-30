@@ -3,6 +3,11 @@
 // import * as ShoppingCart from './shoppingCart.js';
 console.log(`Importing Module`);
 
+// Polyfilling
+import 'core-js/stable';
+//Polyfilling async functions
+import 'regenerator-runtime/runtime';
+
 //shoppingCart log will print to console BEFORE the line3 console.log
 //variables that are declared in a module are scoped to the module
 // so the module itself is like the top level scope
@@ -38,6 +43,7 @@ console.log(`Importing Module`);
 // DEFAULT EXPORTS!
 //When we use Default Exports when we want to export only one thing per module
 //import add, { addToCart, totalPrice as price, tq } from './shoppingCart.js';
+
 import add, { cart } from './shoppingCart.js';
 console.log(add);
 add('pizza', 2);
@@ -65,7 +71,7 @@ const getLastPost = async function () {
 };
 // calling an async function will always return a promise, not the data itself
 const lastPost = getLastPost();
-console.log(lastPost);
+//console.log(lastPost);
 // Not very clean but works
 // lastPost.then(last => console.log(last));
 
@@ -144,8 +150,7 @@ export.addToCart = function (product, quantity) {
 const { addToCard } = require('./shoppingCart.js')
 */
 
-// import cloneDeep from '../node_modules/lodash-es/cloneDeep.js';
-import cloneDeep from 'lodash-es';
+import cloneDeep from '../node_modules/lodash-es/cloneDeep.js';
 
 const state = {
   cart: [
@@ -167,7 +172,20 @@ console.log(stateDeepClone);
 // However, instead of it trigger a WHOLE PAGE RELOAD , it will just inject the changes into the page.
 
 //Great for amending/updating code without losing state (getting logged out, losing code calc etc.)
-
+/*
 if (module.hot) {
   module.hot.accept();
+}*/
+
+class Person {
+  greeting = 'Ahoy';
+  constructor(name) {
+    this.name = name;
+    console.log(`${this.greeting}, ${this.name}`);
+  }
 }
+
+const jiji = new Person('Jiji');
+console.log('Jiji' ?? null);
+console.log(cart.find(el => el.quantity >= 2));
+Promise.resolve('TEST').then(x => console.log(x));

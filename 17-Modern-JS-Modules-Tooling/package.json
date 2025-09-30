@@ -1,16 +1,18 @@
 {
   "name": "17-modern-js-modules-tooling",
   "version": "1.0.0",
-  
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel .\\starter\\index.html",
+    "build": "parcel build .\\starter\\index.html"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "core-js": "^3.45.1",
     "leaflet": "^1.9.4",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {
     "parcel": "^2.16.0"
