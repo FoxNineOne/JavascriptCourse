@@ -184,3 +184,97 @@ import 'core-js/stable/promise' etc..
 One feature that isn't covered by polyfill - async functions
 npm install regenerator-runtime
 import 'regenerator-runtime/runtime';
+
+
+// READABLE CODE
+// Always write readable code
+// Avoid trying to write too clever or over complicated solutions, as this may contradict previous issue
+// Use descriptive variable names "what they contain"
+// Use desciprtion function names "what they do?"
+// DRY - don't repeat yourself. Refactor code 
+// Don't use var
+// use strong type checks (=== and !==)
+
+// FUNCTTONS
+// Generally, functions should only do one Things
+// Don't use more than 3 function parameters, try to return same data type as paramater data types
+// Use default parameters whenever possible
+// Generally return same data type as received
+// Use arrow functions when they make code more readable
+
+// OOP 
+// Use ES6 classes
+// Encapsulate data and don't mutate it from outside of the class
+// Implement method chaining
+// Do not use arrow functions as methods (in regular objects) as they have no access to the "this" keyword
+
+
+// AVOID NESTED CODE
+// Use early return
+// use ternary (conditional) or logical operators instead of if
+// Use multiple if instead of if/else-if
+// Avoid for loops, use array methods instead
+// Avoid callback-based asynchronous API
+
+// ASYNCHRONOUS CODE 
+// Consume promises with async/await for best readability
+// Whenever possible, run promises in parallel (Promise.all)
+// Handle errors and promise rejections
+
+
+There are two fundamentally different ways of writing code (also know as paradigms)
+Imperative , and Declarative
+
+Whenever we write imperative we need to explain how to do certain things, every step the compute rneeds to follow
+
+Example would be a step-by-step recipe of a cake
+or the following 
+  const arr= [2,4,6,8];
+  const doubled = []
+  for (let i=0; i < arr.length; i++)
+  doubled[i] = arr[i] * 2;
+
+
+Declarative programming tells what to do
+We simply describe tyhe way the computer should achieve the result
+the "how" gets abstracted away
+Example : description of a cake
+
+  const arr = [2,4,6,8]
+  const doubled = arr.map(n => n*2);
+
+
+// Functional programming
+- Declarative programming paradigms
+- Based on the idea of writing osftware by combining many 
+  pure functions, avoiding side effects and mutating data
+- Side effct is a modification (mutatioon) of any data outside of the function 
+  (mutating external variables, logging to console, writing to DOM etc.)
+- A pure function is a function without side effects. Doesn't depend
+  on external variables. Given the same inputs, it will always return the same output
+
+we use immutability to avoid mutating external data.
+- Immutability: State (data) is never modified. Instead, 
+  state is copied and the copy is mutated and returned.
+
+Difficult to implement in practise
+
+React and Redux are built primarily around Functional programming
+
+
+We can mix imperative and declarative in our own code, 
+it doesn't have to be all of one.
+
+
+Functional Programming Techniques
+- Try to avoid data mutations
+- Use built-in methods that don't produce side effects
+- Do data transformations with methods such as .map() .filter() and .reduce
+- Try to avoid side effects in functioons: this may not always be possible.
+
+Declarative Syntax
+- Use array and object destructuring
+- Use the spread operator (...)
+- Use the ternary operator (true === true ? "true" : "false")
+- Use template literals `🐈`
+
