@@ -278,3 +278,32 @@ Declarative Syntax
 - Use the ternary operator (true === true ? "true" : "false")
 - Use template literals `🐈`
 
+
+There is a way to make a js object immutable (can't change)
+Object.freeze(objectWeWishToFreeze)
+We can no longer put any new objects into it. 
+"Uncaught TypeError: Cannot add property XXX, object is not extensible
+    at XX.js:XX:XX"
+
+Works best in strict-mode
+
+Cannot add new elements to frozen objects, however only freezes first level of object.
+We can still change objects inside the parent object.
+
+
+
+
+A side effect basically means that 
+something outside of a function is manipulated,
+or that the function does something other than simply returning a value
+
+A function that has or that produces side effects is called 
+an impure function.
+
+We should always pass all the data the function depends upon
+into the function, so that it doesn't have to reach into 
+the outer scope.
+This is good practise.
+
+The function should not change any of these values (mutate)
+
