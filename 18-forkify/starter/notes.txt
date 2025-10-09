@@ -1,0 +1,73 @@
+Architecture
+
+Structure - Architecture will give us structure (the way we organise our code)
+Maintainability - always need to consider the future of the project. "Never really done"
+Expandability - We also need to add new feature in the future.
+
+we can also create our Architecture from scratch, but this only is suitable for small, simpler projects
+
+
+We can use well established architecture patterns like 
+    MVC (model view controller)
+    MVP (model view presenter)
+    Flux
+
+In modern web development, a lot of dev use 
+React, Angular, Vue, Svelte to take care of architecture for them
+This is a good idea for large scale applications
+
+
+There are some components that any architecture must have
+
+That is 
+
+Business Logic
+    - Code that solves the actual business problem
+    - Directly related to what business does and what it needs
+    - Example: Sending messages, storing transactions, calculating taxes etc..
+
+State
+    - Externally stores all the data about the applications
+    - Should be the "single source of truth"
+    - UI should be kept in sync with the State
+    - State libraries exist (Redux MobX)
+
+HTTP Library
+    - Responsible for making and receiving AJAX requests
+    - Optional but almost always necessary in the real-world apps
+    
+Application Logic (Router)
+    - Code that is only concerned about the implementation of the application itself
+    - Application logic includes handling of the UI events and navigation on the page
+    - Mapping actions to users navigation
+
+Presentation Logic
+    - Code that is concerned about the visible part of the application
+    - is responible for displaying application state on the user interface
+
+
+The MVC Architecture
+
+    WEB | <- -> {MODEL}  {CONTROLLOER}  {VIEW}  <- -> | USER
+
+model -
+    All about the applications data, so
+    - State
+    - Business Logic
+    - HTTP Library 
+
+Controller 
+    Bridges between model and views (which don't know about one another)
+    Handles UI events and dispatches tasks to model and view
+    - Application Logic
+
+View - 
+    - Presentation Logic - the part of the application interacting with the user.
+
+
+One of the goals of the MVC pattern is to separate business logic from application logic
+this makes dveloping the application so much easier.
+As a consequence, we need something to connect these two parts.. hence controller!
+
+
+
