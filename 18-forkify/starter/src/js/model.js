@@ -1,12 +1,13 @@
-import { API_URL } from './config.js';
+import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
-import { API_SEARCH_URL } from './config.js';
 import recipeView from './views/recipeView.js';
 export const state = {
   recipe: {},
   search: {
     query: '',
     results: [],
+    page: 1,
+    resultsPerPage: RES_PER_PAGE,
   },
 };
 
@@ -26,10 +27,10 @@ export const loadRecipe = async function (id) {
       sourceUrl: recipe.source_url,
       image: recipe.image_url,
       servings: recipe.servings,
-      cookingTimefdf: recipe.cooking_time,
+      cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-    console.log(state.recipe);
+    //console.log(state.recipe);
   } catch (err) {
     console.error(`‼️${err}‼️`);
     throw err;
@@ -41,12 +42,7 @@ export const loadSearchResults = async function (query) {
     state.search.query = query;
 
     const data = await getJSON(`${API_URL}?search=${query}`);
-    console.log('data');
-    console.log(data);
-    console.log(state.search.results);
-    //The state search results are an empty array... figure out that
-
-    state.search.results = data.recipes.map(rec => {
+    state.search.results = data.data.recipes.map(rec => {
       return {
         id: rec.id,
         title: rec.title,
@@ -54,9 +50,17 @@ export const loadSearchResults = async function (query) {
         image: rec.image_url,
       };
     });
-    // console.log(state.search.results);
   } catch (err) {
     console.error(`‼️${err}‼️`);
     throw err;
   }
+};
+
+export const getSearchResultsPage = function (page = state.search.page) {
+  state.search.page = page;
+
+  const start = (page - 1) * state.search.resultsPerPage;
+  const finish = page * state.search.resultsPerPage;
+
+  return state.search.results.slice(start, finish);
 };
