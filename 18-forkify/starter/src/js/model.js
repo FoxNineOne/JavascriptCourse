@@ -15,10 +15,9 @@ export const loadRecipe = async function (id) {
     const data = await getJSON(`${API_URL}/${id}`);
     //const res = await fetch(`${API_URL}/${id}`);
     //const data = await res.json();
-
     //if (!res.ok) throw new Error(`${data.message} (${res.status})`);
-
     //console.log(res, data);
+
     const { recipe } = data.data;
     state.recipe = {
       id: recipe.id,
@@ -41,12 +40,15 @@ export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
 
-    const data = await getJSON(`${API_SEARCH_URL}search?q=${query}`);
-    //console.log(data);
+    const data = await getJSON(`${API_URL}?search=${query}`);
+    console.log('data');
+    console.log(data);
+    console.log(state.search.results);
+    //The state search results are an empty array... figure out that
 
     state.search.results = data.recipes.map(rec => {
       return {
-        id: rec.recipe_id,
+        id: rec.id,
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,

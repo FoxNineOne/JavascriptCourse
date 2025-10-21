@@ -209,6 +209,7 @@ body {
 
 .spinner {
   text-align: center;
+  visibility: visible;
   margin: 5rem auto;
 }
 
