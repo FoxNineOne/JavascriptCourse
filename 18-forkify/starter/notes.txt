@@ -72,3 +72,18 @@ As a consequence, we need something to connect these two parts.. hence controlle
 
 
 Helps & Functions
+
+
+// "build": "npm run clean && parcel build index.html"
+Outstanding implementation
+================================
+- Display number of pages between pagination buttons
+"Page X of X"
+- Ability to sort search results by duration or number of ingredients
+- Perform ingredient validation in view, before submitting the form
+- Allow for more than 6 ingredients
+
+- Shopping list feature, add ingredient to cart
+- weekly meal planning feature. Assign recipes to the next 7 days and show on a weekly calendar
+- get nutrition daya on each ingredient from a spoonacular Application
+    calculate the total calories per recipe. 
